@@ -1,4 +1,4 @@
-name: Build APK and Web
+name: Build and Deploy Web
 
 on:
   push:
@@ -10,32 +10,6 @@ permissions:
   id-token: write
 
 jobs:
-  build-apk:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-
-      - name: Generate Android files
-        run: flutter create --project-name niggatrader --platforms=android .
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build APK
-        run: flutter build apk --release
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: trading-journal-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
-
   deploy-web:
     runs-on: ubuntu-latest
     environment:
