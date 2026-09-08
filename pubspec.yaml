@@ -1,0 +1,14 @@
+name: soul
+description: Soul Trading Journal.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shadcn_ui: ^0.2.4
+  hugeicons: ^1.1.6
+  google_fonts: ^6.1.0
