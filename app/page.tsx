@@ -142,27 +142,27 @@ export default function Dashboard() {
 
       {/* HEADER SECTION */}
       <section className="mt-6 px-5">
-        <h1 className="text-[30px] font-medium tracking-tight">
-          Welcome back, cow
+        <h1 className="text-[26px] font-medium tracking-tight">
+          Welcome back, User
         </h1>
-        <p className="mt-1 text-base font-medium text-neutral-400 tracking-tight">
+        <p className="mt-[2px] text-base font-medium text-neutral-400 tracking-tight">
           Wed 09 Sep, 2026
         </p>
       </section>
 
       {/* MAIN CHART CARD */}
-      <section className="mt-6 px-5">
+      <section className="mt-[2px] px-5">
         <div className="rounded-2xl border border-neutral-800/60 bg-[#0A0A0A] p-5 shadow-sm">
           
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-base font-medium tracking-tight text-neutral-400">
+              <p className="mt-[2px] text-base font-medium tracking-tight text-neutral-400">
                 Account Balance
               </p>
-              <h2 className="mt-1.5 text-[30px] font-medium tracking-tight">
+              <h2 className="mt-[2px] text-[26px] font-medium tracking-tight">
                 {displayView === 'Hide P&L' ? '******' : '$50,640'}
               </h2>
-              <p className="mt-1 text-base font-medium tracking-tight text-neutral-500">
+              <p className="mt-[2px] text-base font-medium tracking-tight text-neutral-500">
                 Last {timeframe === 'Day' ? '24 Hours' : timeframe === 'Week' ? '7 Days' : timeframe === 'Month' ? '30 Days' : timeframe}
               </p>
             </div>
