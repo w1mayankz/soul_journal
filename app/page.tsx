@@ -145,7 +145,7 @@ export default function Dashboard() {
         <h1 className="text-[26px] font-medium tracking-tight">
           Welcome back, User
         </h1>
-        <p className="mt-[1px] text-base font-medium text-neutral-400 tracking-tight leading-none">
+        <p className="mt-[1px] text-[15px] font-semibold text-neutral-400 tracking-tight leading-none">
           Wed 09 Sep, 2026
         </p>
       </section>
