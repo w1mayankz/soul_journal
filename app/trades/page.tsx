@@ -79,7 +79,7 @@ export default function TradesPage() {
             </span>
             <div className="flex justify-end">
               <div className="flex items-center gap-1 rounded-md bg-[#009C00]/15 px-2 py-1 text-[12px] font-medium text-[#009C00]">
-                <ArrowUp02Icon size={12} variant="solid" />
+                <ArrowUp02Icon size={12} />
                 $861
               </div>
             </div>
@@ -95,7 +95,7 @@ export default function TradesPage() {
             </span>
             <div className="flex justify-end">
               <div className="flex items-center gap-1 rounded-md bg-[#009C00]/15 px-2 py-1 text-[12px] font-medium text-[#009C00]">
-                <ArrowUp02Icon size={12} variant="solid" />
+                <ArrowUp02Icon size={12} />
                 $640
               </div>
             </div>
