@@ -97,31 +97,31 @@ export function AddTradeModal() {
                   {symbol || <span className="text-neutral-600">Select symbol...</span>}
                   <ArrowDown01Icon size={18} className="text-neutral-500" />
                 </Popover.Trigger>
-                <Popover.Portal>
-                  <Popover.Content align="start" className="z-[80] w-[calc(95vw-40px)] max-w-[440px] rounded-xl border border-neutral-800 bg-[#0A0A0A] p-0 shadow-2xl animate-in fade-in-80 zoom-in-95">
-                    <div className="flex items-center border-b border-neutral-800 px-3 py-2">
-                      <Search01Icon size={16} className="text-neutral-500 mr-2" />
-                      <input 
-                        type="text" 
-                        placeholder="Search symbols..." 
-                        className="flex-1 bg-transparent py-1.5 text-[14px] text-white outline-none placeholder:text-neutral-600"
-                        value={symbolSearch}
-                        onChange={(e) => setSymbolSearch(e.target.value)}
-                      />
-                    </div>
-                    <div className="max-h-[200px] overflow-y-auto p-1">
-                      {filteredSymbols.map(s => (
-                        <button 
-                          key={s} 
-                          onClick={() => { setSymbol(s); setSymbolOpen(false); }}
-                          className="w-full rounded-lg px-3 py-2.5 text-left text-[14px] font-medium text-neutral-300 hover:bg-[#1A1A1A] hover:text-white outline-none"
-                        >
-                          {s}
-                        </button>
-                      ))}
-                    </div>
-                  </Popover.Content>
-                </Popover.Portal>
+                
+                {/* PORTAL REMOVED */}
+                <Popover.Content align="start" className="z-[80] w-[calc(95vw-40px)] max-w-[440px] rounded-xl border border-neutral-800 bg-[#0A0A0A] p-0 shadow-2xl animate-in fade-in-80 zoom-in-95">
+                  <div className="flex items-center border-b border-neutral-800 px-3 py-2">
+                    <Search01Icon size={16} className="text-neutral-500 mr-2" />
+                    <input 
+                      type="text" 
+                      placeholder="Search symbols..." 
+                      className="flex-1 bg-transparent py-1.5 text-[14px] text-white outline-none placeholder:text-neutral-600"
+                      value={symbolSearch}
+                      onChange={(e) => setSymbolSearch(e.target.value)}
+                    />
+                  </div>
+                  <div className="max-h-[200px] overflow-y-auto p-1">
+                    {filteredSymbols.map(s => (
+                      <button 
+                        key={s} 
+                        onClick={() => { setSymbol(s); setSymbolOpen(false); }}
+                        className="w-full rounded-lg px-3 py-2.5 text-left text-[14px] font-medium text-neutral-300 hover:bg-[#1A1A1A] hover:text-white outline-none"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </Popover.Content>
               </Popover.Root>
             </div>
 
@@ -133,43 +133,44 @@ export function AddTradeModal() {
                   {date ? `${format(date, 'yyyy/MM/dd')} ${time}` : <span className="text-neutral-600">Pick a date</span>}
                   <Calendar01Icon size={18} className="text-neutral-500" />
                 </Popover.Trigger>
-                <Popover.Portal>
-                  <Popover.Content align="start" className="z-[80] rounded-xl border border-neutral-800 bg-[#0A0A0A] p-3 shadow-2xl animate-in fade-in-80 zoom-in-95">
-                    <DayPicker
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      classNames={{
-                        months: "flex flex-col",
-                        caption: "flex justify-center pt-1 relative items-center mb-4",
-                        caption_label: "text-[14px] font-medium text-white",
-                        nav: "space-x-1 flex items-center",
-                        nav_button: "h-7 w-7 bg-transparent p-0 text-neutral-400 hover:text-white transition-colors",
-                        nav_button_previous: "absolute left-1",
-                        nav_button_next: "absolute right-1",
-                        table: "w-full border-collapse",
-                        head_row: "flex mb-2",
-                        head_cell: "text-neutral-500 rounded-md w-9 font-medium text-[12px]",
-                        row: "flex w-full mt-1",
-                        cell: "text-center p-0 relative focus-within:relative focus-within:z-20 rounded-md",
-                        day: "h-9 w-9 p-0 text-[14px] font-medium text-white hover:bg-[#1A1A1A] rounded-md transition-colors outline-none",
-                        day_selected: "bg-green-500 !text-black hover:bg-green-500 hover:text-black",
-                        day_today: "bg-[#1A1A1A] text-white",
-                        day_outside: "text-neutral-600 opacity-50",
-                        day_disabled: "text-neutral-600 opacity-50",
-                        day_hidden: "invisible",
-                      }}
+                
+                {/* PORTAL REMOVED */}
+                <Popover.Content align="start" className="z-[80] rounded-xl border border-neutral-800 bg-[#0A0A0A] p-3 shadow-2xl animate-in fade-in-80 zoom-in-95">
+                  <DayPicker
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    showOutsideDays={true}
+                    classNames={{
+                      months: "flex flex-col",
+                      caption: "flex justify-center pt-1 relative items-center mb-4",
+                      caption_label: "text-[14px] font-medium text-white",
+                      nav: "space-x-1 flex items-center",
+                      nav_button: "h-7 w-7 bg-transparent p-0 text-neutral-400 hover:text-white transition-colors",
+                      nav_button_previous: "absolute left-1",
+                      nav_button_next: "absolute right-1",
+                      table: "w-full border-collapse",
+                      head_row: "flex",
+                      head_cell: "text-neutral-500 rounded-md w-9 font-medium text-[12px]",
+                      row: "flex w-full mt-1",
+                      cell: "h-9 w-9 text-center p-0 relative focus-within:relative focus-within:z-20 rounded-md",
+                      day: "h-9 w-9 p-0 text-[14px] font-medium text-white hover:bg-[#1A1A1A] rounded-md transition-colors outline-none",
+                      day_selected: "bg-green-500 !text-black hover:bg-green-500 hover:text-black",
+                      day_today: "bg-[#1A1A1A] text-white",
+                      day_outside: "text-neutral-600 opacity-50",
+                      day_disabled: "text-neutral-600 opacity-50",
+                      day_hidden: "invisible",
+                    }}
+                  />
+                  <div className="mt-3 border-t border-neutral-800 pt-3">
+                    <input 
+                      type="time" 
+                      value={time}
+                      onChange={(e) => setTime(e.target.value)}
+                      className="w-full rounded-lg bg-[#141414] px-3 py-2 text-[14px] font-medium text-white outline-none"
                     />
-                    <div className="mt-3 border-t border-neutral-800 pt-3">
-                      <input 
-                        type="time" 
-                        value={time}
-                        onChange={(e) => setTime(e.target.value)}
-                        className="w-full rounded-lg bg-[#141414] px-3 py-2 text-[14px] font-medium text-white outline-none"
-                      />
-                    </div>
-                  </Popover.Content>
-                </Popover.Portal>
+                  </div>
+                </Popover.Content>
               </Popover.Root>
             </div>
 
