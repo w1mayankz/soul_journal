@@ -5,18 +5,20 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { TopNavbar } from '../../components/top-navbar';
 import { 
   DollarSquareIcon, 
-  PlusSignIcon,
   FilterIcon,
   Menu05Icon, 
   ArrowUp02Icon,
+  ArrowDown01Icon,
   ArrowLeft01Icon,
   ArrowRight01Icon,
   PercentIcon,
   ViewOffSlashIcon
 } from 'hugeicons-react';
+import { useTrades } from '../../context/trades-context';
 
 export default function TradesPage() {
   const [displayView, setDisplayView] = useState('Money View');
+  const { trades } = useTrades();
 
   return (
     <div className="relative min-h-screen bg-black pb-24 font-sans text-white">
@@ -73,21 +75,32 @@ export default function TradesPage() {
             <span className="text-right text-[15px] font-medium text-neutral-600">P&L</span>
           </div>
 
-          {/* Dummy Trade Row 1 */}
-          <button className="flex w-full grid grid-cols-[1.5fr_1fr_1fr] items-center px-4 py-3 hover:bg-[#141414] transition-colors rounded-xl outline-none group text-left">
-            <span className="text-[15px] font-semibold text-neutral-300">
-              09/09/2026 15:53
-            </span>
-            <span className="text-center text-[15px] font-medium text-white">
-              NAS100
-            </span>
-            <div className="flex justify-end">
-              <div className="flex items-center gap-1 rounded-md bg-[#009C00]/15 px-2 py-1 text-[15px] font-medium text-[#009C00]">
-                {displayView !== 'Hide P&L' && <ArrowUp02Icon size={12} />}
-                {displayView === 'Hide P&L' ? '***' : displayView === 'Percentage View' ? '1.7%' : '$861'}
-              </div>
-            </div>
-          </button>
+          {/* DYNAMIC REAL TRADES MAPPED HERE */}
+          {trades.map((trade) => {
+            const isWin = trade.pnl > 0;
+            const pnlColorClass = isWin ? 'text-[#009C00] bg-[#009C00]/15' : 'text-[#F44336] bg-[#F44336]/15';
+            
+            return (
+              <button key={trade.id} className="flex w-full grid grid-cols-[1.5fr_1fr_1fr] items-center px-4 py-3 hover:bg-[#141414] transition-colors rounded-xl outline-none group text-left mb-1">
+                <span className="text-[15px] font-semibold text-neutral-300 group-hover:text-white transition-colors">
+                  {trade.date}
+                </span>
+                <span className="text-center text-[15px] font-medium text-white">
+                  {trade.symbol}
+                </span>
+                <div className="flex justify-end">
+                  <div className={`flex items-center gap-1 rounded-md px-2 py-1 text-[15px] font-medium ${pnlColorClass}`}>
+                    {displayView !== 'Hide P&L' && (
+                      isWin ? <ArrowUp02Icon size={12} /> : <ArrowDown01Icon size={12} />
+                    )}
+                    {displayView === 'Hide P&L' ? '***' : 
+                     displayView === 'Percentage View' ? `${((trade.pnl / 50000) * 100).toFixed(1)}%` : 
+                     `${isWin ? '' : '-'}$${Math.abs(trade.pnl).toLocaleString()}`}
+                  </div>
+                </div>
+              </button>
+            )
+          })}
 
           {/* Pagination Controls */}
           <div className="mt-6 mb-1 flex items-center justify-center gap-6">
@@ -104,14 +117,6 @@ export default function TradesPage() {
 
         </div>
       </section>
-
-      {/* FLOATING ACTION BUTTON */}
-      <button 
-        className="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#009C00]/15 backdrop-blur-xl border border-[#009C00]/30 text-[#009C00] shadow-lg shadow-[#009C00]/10 active:scale-95 transition-all z-50 outline-none"
-        aria-label="Log new trade"
-      >
-        <PlusSignIcon size={28} />
-      </button>
 
     </div>
   );
