@@ -1,10 +1,10 @@
 'use client';
 
 import { 
-  Grid01Icon, 
+  GridIcon, 
   Calendar01Icon, 
   Task01Icon, 
-  ChartBar01Icon, 
+  Chart01Icon, 
   Briefcase01Icon, 
   ArrowLeftDoubleIcon, 
   UserMultipleIcon,
@@ -49,7 +49,7 @@ export function AppSidebar() {
           <p className="mb-2 px-2 text-[11px] font-medium text-neutral-500">Journaling</p>
           <nav className="flex flex-col gap-1">
             <a href="#" className="flex items-center gap-3 rounded-lg bg-[#141414] px-3 py-2.5 text-[14px] font-medium text-white">
-              <Grid01Icon size={18} className="text-neutral-300" /> Dashboard
+              <GridIcon size={18} className="text-neutral-300" /> Dashboard
             </a>
             <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium text-neutral-400 hover:bg-[#141414] hover:text-white">
               <Calendar01Icon size={18} /> Calendar
@@ -58,7 +58,7 @@ export function AppSidebar() {
               <Task01Icon size={18} /> Trades
             </a>
             <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium text-neutral-400 hover:bg-[#141414] hover:text-white">
-              <ChartBar01Icon size={18} /> Analytics
+              <Chart01Icon size={18} /> Analytics
             </a>
             <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium text-neutral-400 hover:bg-[#141414] hover:text-white">
               <Briefcase01Icon size={18} /> Strategies
