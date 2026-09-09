@@ -89,22 +89,6 @@ export default function TradesPage() {
             </div>
           </button>
 
-          {/* Dummy Trade Row 2 (Single line format) */}
-          <button className="flex w-full grid grid-cols-[1.5fr_1fr_1fr] items-center px-4 py-3 hover:bg-[#141414] transition-colors rounded-xl outline-none group text-left">
-            <span className="text-[13px] font-medium text-neutral-300 group-hover:text-white transition-colors">
-              03/09/2026 09:53
-            </span>
-            <span className="text-center text-[13px] font-medium text-white">
-              NQ1!
-            </span>
-            <div className="flex justify-end">
-              <div className="flex items-center gap-1 rounded-md bg-[#009C00]/15 px-2 py-1 text-[12px] font-medium text-[#009C00]">
-                {displayView !== 'Hide P&L' && <ArrowUp02Icon size={12} />}
-                {displayView === 'Hide P&L' ? '***' : displayView === 'Percentage View' ? '1.2%' : '$640'}
-              </div>
-            </div>
-          </button>
-
           {/* Pagination Controls */}
           <div className="mt-6 mb-1 flex items-center justify-center gap-6">
             <button className="text-neutral-500 hover:text-white transition-colors active:scale-95 outline-none">
