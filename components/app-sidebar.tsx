@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { 
   GridIcon, 
   Calendar01Icon, 
@@ -14,6 +16,8 @@ import {
 } from 'hugeicons-react';
 
 export function AppSidebar() {
+  const pathname = usePathname();
+
   return (
     <div className="flex h-full w-full flex-col bg-[#000000] text-neutral-300">
       
@@ -48,15 +52,15 @@ export function AppSidebar() {
         <div className="mb-6">
           <p className="mb-2 px-2 text-[12px] font-semibold text-neutral-500">Journaling</p>
           <nav className="flex flex-col gap-1">
-            <a href="#" className="flex items-center gap-3 rounded-lg bg-[#141414] px-3 py-2.5 text-[15px] font-medium text-white">
-              <GridIcon size={18} className="text-neutral-300" /> Dashboard
-            </a>
-            <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[16px] font-medium text-white hover:bg-[#141414) hover:text-white">
+            <Link href="/" className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-colors ${pathname === '/' ? 'bg-[#141414] text-[15px] text-white' : 'text-[16px] text-white hover:bg-[#141414]'}`}>
+              <GridIcon size={18} className={pathname === '/' ? 'text-neutral-300' : ''} /> Dashboard
+            </Link>
+            <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[16px] font-medium text-white hover:bg-[#141414] hover:text-white">
               <Calendar01Icon size={18} /> Calendar
             </a>
-            <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[16px] font-medium text-white hover:bg-[#141414] hover:text-white">
-              <Task01Icon size={18} /> Trades
-            </a>
+            <Link href="/trades" className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-colors ${pathname === '/trades' ? 'bg-[#141414] text-[15px] text-white' : 'text-[16px] text-white hover:bg-[#141414]'}`}>
+              <Task01Icon size={18} className={pathname === '/trades' ? 'text-neutral-300' : ''} /> Trades
+            </Link>
             <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[16px] font-medium text-white hover:bg-[#141414] hover:text-white">
               <Chart01Icon size={18} /> Analytics
             </a>
