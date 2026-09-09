@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { TopNavbar } from '../components/top-navbar';
 import { 
   Menu01Icon, 
   DollarSquareIcon, 
@@ -76,83 +77,61 @@ export default function Dashboard() {
 
   return (
     <div className="relative min-h-screen bg-black pb-24 font-sans text-white">
-      
-     {/* TOP NAVBAR */}
-      <header className="flex h-14 items-center justify-between px-4 pt-2">
-        <div className="flex items-center gap-1">
-          
-          <Dialog.Root>
-            <Dialog.Trigger asChild>
-              <button className="flex h-12 w-12 items-center justify-center text-neutral-300 hover:text-white transition-colors active:scale-95 outline-none">
-                <Menu01Icon size={24} />
-              </button>
-            </Dialog.Trigger>
-            <Dialog.Portal>
-              <Dialog.Overlay className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-              <Dialog.Content className="fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col bg-black outline-none transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left shadow-2xl border-r border-neutral-800/60">
-                <AppSidebar />
-              </Dialog.Content>
-            </Dialog.Portal>
-          </Dialog.Root>
-          <span className="text-[15px] font-medium tracking-tight">Dashboard</span>
-        </div>
 
-        
-        <div className="flex items-center gap-3 pr-1">
-          {/* TIMEFRAME DROPDOWN (SHADCN RADIX) */}
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger className="flex h-10 items-center gap-1.5 rounded-xl bg-[#141414] px-3 text-[14px] font-medium text-neutral-300 hover:bg-[#222] transition-colors active:scale-95 outline-none">
-              {timeframe}
-              <ArrowDown01Icon size={16} className="text-white" />
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Portal>
-              <DropdownMenu.Content 
-                align="end"
-                className="z-50 min-w-[160px] overflow-hidden rounded-xl border border-neutral-800 bg-[#0A0A0A]/90 backdrop-blur-xl p-1 shadow-2xl text-white text-[15px] animate-in fade-in-80 zoom-in-95 data-[side=bottom]:slide-in-from-top-2"
-              >
-                <DropdownMenu.Item onClick={() => setTimeframe('Day')} className="flex items-center gap-2 rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
-                  <Calendar01Icon size={18} className="text-neutral-400" /> Day
-                </DropdownMenu.Item>
-                <DropdownMenu.Item onClick={() => setTimeframe('Week')} className="flex items-center gap-2 rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
-                  <Calendar03Icon size={18} className="text-neutral-400" /> Week
-                </DropdownMenu.Item>
-                <DropdownMenu.Item onClick={() => setTimeframe('Month')} className="flex items-center gap-2 rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
-                  <Calendar02Icon size={18} className="text-neutral-400" /> Month
-                </DropdownMenu.Item>
-                <DropdownMenu.Item onClick={() => setTimeframe('Year')} className="flex items-center gap-2 rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
-                  <Calendar04Icon size={18} className="text-neutral-400" /> Year
-                </DropdownMenu.Item>
-                <DropdownMenu.Item onClick={() => setTimeframe('All Time')} className="flex items-center gap-2 rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
-                  <Appointment01Icon size={18} className="text-neutral-400" /> All Time
-                </DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.Portal>
-          </DropdownMenu.Root>
+      <TopNavbar>
+        {/* TIMEFRAME DROPDOWN (ONLY ON DASHBOARD) */}
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger className="flex h-10 items-center gap-1.5 rounded-xl bg-[#141414] px-3 text-[14px] font-medium text-neutral-300 hover:bg-[#222] transition-colors active:scale-95 outline-none">
+            {timeframe}
+            <ArrowDown01Icon size={16} className="text-white" />
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content 
+              align="end"
+              className="z-50 min-w-[160px] overflow-hidden rounded-xl border border-neutral-800 bg-[#0A0A0A]/90 backdrop-blur-xl p-1 shadow-2xl text-white text-[15px] animate-in fade-in-80 zoom-in-95 data-[side=bottom]:slide-in-from-top-2"
+            >
+              <DropdownMenu.Item onClick={() => setTimeframe('Day')} className="flex items-center gap-2 rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
+                <Calendar01Icon size={18} className="text-neutral-400" /> Day
+              </DropdownMenu.Item>
+              <DropdownMenu.Item onClick={() => setTimeframe('Week')} className="flex items-center gap-2 rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
+                <Calendar03Icon size={18} className="text-neutral-400" /> Week
+              </DropdownMenu.Item>
+              <DropdownMenu.Item onClick={() => setTimeframe('Month')} className="flex items-center gap-2 rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
+                <Calendar02Icon size={18} className="text-neutral-400" /> Month
+              </DropdownMenu.Item>
+              <DropdownMenu.Item onClick={() => setTimeframe('Year')} className="flex items-center gap-2 rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
+                <Calendar04Icon size={18} className="text-neutral-400" /> Year
+              </DropdownMenu.Item>
+              <DropdownMenu.Item onClick={() => setTimeframe('All Time')} className="flex items-center gap-2 rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
+                <Appointment01Icon size={18} className="text-neutral-400" /> All Time
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
 
-          {/* VIEW TOGGLE DROPDOWN (SHADCN RADIX) */}
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#141414] text-neutral-300 hover:bg-[#222] transition-colors active:scale-95 outline-none">
-              <DollarSquareIcon size={22} />
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Portal>
-              <DropdownMenu.Content 
-                align="end"
-                className="z-50 min-w-[200px] overflow-hidden rounded-xl border border-neutral-800 bg-[#0A0A0A]/90 backdrop-blur-xl p-1 shadow-2xl text-white text-[15px] animate-in fade-in-80 zoom-in-95 data-[side=bottom]:slide-in-from-top-2"
-              >
-                <DropdownMenu.Item onClick={() => setDisplayView('Money View')} className="flex items-center justify-between rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
-                  Money View <DollarSquareIcon size={18} className="text-neutral-400" />
-                </DropdownMenu.Item>
-                <DropdownMenu.Item onClick={() => setDisplayView('Percentage View')} className="flex items-center justify-between rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
-                  Percentage View <PercentIcon size={18} className="text-neutral-400" />
-                </DropdownMenu.Item>
-                <DropdownMenu.Item onClick={() => setDisplayView('Hide P&L')} className="flex items-center justify-between rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
-                  Hide P&L <ViewOffSlashIcon size={18} className="text-neutral-400" />
-                </DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.Portal>
-          </DropdownMenu.Root>
-        </div>
-      </header>
+        {/* PNL VIEW TOGGLE DROPDOWN */}
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#141414] text-neutral-300 hover:bg-[#222] transition-colors active:scale-95 outline-none">
+            <DollarSquareIcon size={22} />
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content 
+              align="end"
+              className="z-50 min-w-[200px] overflow-hidden rounded-xl border border-neutral-800 bg-[#0A0A0A]/90 backdrop-blur-xl p-1 shadow-2xl text-white text-[15px] animate-in fade-in-80 zoom-in-95 data-[side=bottom]:slide-in-from-top-2"
+            >
+              <DropdownMenu.Item onClick={() => setDisplayView('Money View')} className="flex items-center justify-between rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
+                Money View <DollarSquareIcon size={18} className="text-neutral-400" />
+              </DropdownMenu.Item>
+              <DropdownMenu.Item onClick={() => setDisplayView('Percentage View')} className="flex items-center justify-between rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
+                Percentage View <PercentIcon size={18} className="text-neutral-400" />
+              </DropdownMenu.Item>
+              <DropdownMenu.Item onClick={() => setDisplayView('Hide P&L')} className="flex items-center justify-between rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
+                Hide P&L <ViewOffSlashIcon size={18} className="text-neutral-400" />
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
+      </TopNavbar>      
 
       {/* HEADER SECTION */}
       <section className="mt-6 px-5">
