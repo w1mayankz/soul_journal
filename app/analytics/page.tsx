@@ -5,11 +5,13 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { TopNavbar } from '../../components/top-navbar';
 import { DollarSquareIcon, PercentIcon, ViewOffSlashIcon } from 'hugeicons-react';
 
-export default function PlaceholderPage() {
+export default function CalendarPage() {
   const [displayView, setDisplayView] = useState('Money View');
 
   return (
     <div className="relative min-h-screen bg-black pb-24 font-sans text-white">
+      
+      {/* We pass the Dropdown code INSIDE the TopNavbar so it shows up */}
       <TopNavbar>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#141414] text-neutral-300 hover:bg-[#222] transition-colors active:scale-95 outline-none">
@@ -33,6 +35,11 @@ export default function PlaceholderPage() {
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
       </TopNavbar>
+
+      <div className="mt-32 flex items-center justify-center text-[14px] text-neutral-500">
+        Content coming soon...
+      </div>
+      
     </div>
   );
 }
