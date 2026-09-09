@@ -152,7 +152,7 @@ export default function Dashboard() {
 
       {/* MAIN CHART CARD */}
       <section className="mt-1 px-5">
-        <div className="rounded-2xl border border-neutral-800/60 bg-[#0A0A0A] p-5 shadow-sm">
+        <div className="rounded-2xl border border-neutral-800/60 bg-[#0A0A0A] p-5 overflow-hidden">
           
           <div className="flex items-start justify-between">
             <div>
@@ -174,7 +174,7 @@ export default function Dashboard() {
           </div>
 
           {/* RECHARTS AREA CHART */}
-          <div className="mt-6 h-[180px] w-full">
+          <div className="mt-6 h-[180px] -mx-5">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
                 <defs>
