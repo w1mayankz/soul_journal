@@ -3,9 +3,7 @@
 import { useState } from 'react';
 import { TopNavbar } from '../components/top-navbar';
 import { 
-  Menu01Icon, 
   DollarSquareIcon, 
-  PlusSignIcon,
   Calendar01Icon,
   Calendar02Icon,
   Calendar03Icon,
@@ -15,11 +13,10 @@ import {
   ViewOffSlashIcon,
   ArrowDown01Icon
 } from 'hugeicons-react';
-import * as Dialog from '@radix-ui/react-dialog';
-import { AppSidebar } from '../components/app-sidebar';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import { subDays, subHours, subMonths, subYears, format } from 'date-fns';
+import { useTrades } from '../context/trades-context';
 
 // Dynamic data generation anchored to Sept 9, 2026
 const generateChartData = (timeframe: string) => {
@@ -28,44 +25,25 @@ const generateChartData = (timeframe: string) => {
   
   if (timeframe === 'Day') {
     for (let i = 24; i >= 0; i--) {
-      data.push({
-        time: format(subHours(baseDate, i), 'ha'),
-        value: 50000 + (Math.random() * 1000)
-      });
+      data.push({ time: format(subHours(baseDate, i), 'ha'), value: 50000 + (Math.random() * 1000) });
     }
   } else if (timeframe === 'Week') {
     for (let i = 7; i >= 0; i--) {
-      data.push({
-        time: format(subDays(baseDate, i), 'MMM dd'),
-        value: 50000 + (Math.random() * 2000)
-      });
+      data.push({ time: format(subDays(baseDate, i), 'MMM dd'), value: 50000 + (Math.random() * 2000) });
     }
   } else if (timeframe === 'Month') {
     for (let i = 30; i >= 0; i--) {
-      data.push({
-        time: format(subDays(baseDate, i), 'MMM dd'),
-        value: 48000 + (Math.random() * 5000)
-      });
+      data.push({ time: format(subDays(baseDate, i), 'MMM dd'), value: 48000 + (Math.random() * 5000) });
     }
   } else if (timeframe === 'Year') {
     for (let i = 12; i >= 0; i--) {
-      data.push({
-        time: format(subMonths(baseDate, i), 'MMM yyyy'),
-        value: 40000 + (Math.random() * 15000)
-      });
+      data.push({ time: format(subMonths(baseDate, i), 'MMM yyyy'), value: 40000 + (Math.random() * 15000) });
     }
   } else {
     for (let i = 5; i >= 0; i--) {
-      data.push({
-        time: format(subYears(baseDate, i), 'yyyy'),
-        value: 20000 + (Math.random() * 40000)
-      });
+      data.push({ time: format(subYears(baseDate, i), 'yyyy'), value: 20000 + (Math.random() * 40000) });
     }
   }
-  
-  // Force a specific spike for visual accuracy to the reference screenshot
-  data[data.length - 2].value = 50640;
-  data[data.length - 1].value = 50640;
   return data;
 };
 
@@ -73,7 +51,17 @@ export default function Dashboard() {
   const [timeframe, setTimeframe] = useState('Week');
   const [displayView, setDisplayView] = useState('Money View');
   
+  const { trades } = useTrades();
+  
+  // Calculate real balances dynamically from Context
+  const totalRealPnl = trades.reduce((sum, trade) => sum + trade.pnl, 0);
+  const realBalance = 50000 + totalRealPnl;
+
   const chartData = generateChartData(timeframe);
+  
+  // Anchor the chart's current end point to the real money balance
+  chartData[chartData.length - 2].value = realBalance;
+  chartData[chartData.length - 1].value = realBalance;
 
   return (
     <div className="relative min-h-screen bg-black pb-24 font-sans text-white">
@@ -153,15 +141,15 @@ export default function Dashboard() {
                 Account Balance
               </p>
               <h2 className="mt-[1px] text-[26px] font-medium tracking-tight">
-                {displayView === 'Hide P&L' ? '******' : '$50,640'}
+                {displayView === 'Hide P&L' ? '******' : `$${realBalance.toLocaleString()}`}
               </h2>
               <p className="mt-[1px] text-[15px] font-semibold tracking-tight text-neutral-600">
                 Last {timeframe === 'Day' ? '24 Hours' : timeframe === 'Week' ? '7 Days' : timeframe === 'Month' ? '30 Days' : timeframe}
               </p>
             </div>
             {displayView !== 'Hide P&L' && (
-              <div className="flex items-center rounded-md bg-green-500/10 px-2 py-1 text-base font-medium tracking-tight text-green-500">
-                +$640
+              <div className={`flex items-center rounded-md px-2 py-1 text-base font-medium tracking-tight ${totalRealPnl >= 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                {totalRealPnl >= 0 ? '+' : '-'}${Math.abs(totalRealPnl).toLocaleString()}
               </div>
             )}
           </div>
@@ -172,7 +160,6 @@ export default function Dashboard() {
               <AreaChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    {/* Changed gradient stops to #009C00 */}
                     <stop offset="5%" stopColor="#009C00" stopOpacity={0.35} />
                     <stop offset="95%" stopColor="#009C00" stopOpacity={0} />
                   </linearGradient>
@@ -187,13 +174,11 @@ export default function Dashboard() {
                 />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#141414', borderColor: '#262626', borderRadius: '8px', color: '#fff', fontSize: '13px' }}
-                  // Changed hover text color to #009C00
                   itemStyle={{ color: '#009C00' }}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="value" 
-                  // Changed main chart line to #009C00
                   stroke="#009C00" 
                   strokeWidth={2}
                   fill="url(#colorValue)" 
@@ -203,14 +188,6 @@ export default function Dashboard() {
           </div>
         </div>
       </section>
-
-      {/* FLOATING ACTION BUTTON */}
-      <button 
-        className="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#001A00] backdrop-blur-xl text-[#009C00] active:scale-95 transition-all z-50"
-        aria-label="Log new trade"
-      >
-        <PlusSignIcon size={28} />
-      </button>
       
     </div>
   );
