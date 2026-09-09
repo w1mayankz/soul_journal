@@ -16,11 +16,8 @@ const TradesContext = createContext<{
 } | null>(null);
 
 export function TradesProvider({ children }: { children: ReactNode }) {
-  // Pre-loaded with your two initial trades
-  const [trades, setTrades] = useState<Trade[]>([
-    { id: 1, date: '2026/09/09 15:53', symbol: 'NAS100', side: 'buy', pnl: 861 },
-    { id: 2, date: '2026/09/03 09:53', symbol: 'NQ1!', side: 'buy', pnl: 640 }
-  ]);
+  // Initialized completely empty—no dummy data
+  const [trades, setTrades] = useState<Trade[]>([]);
 
   const addTrade = (trade: Trade) => {
     setTrades(prev => [trade, ...prev]);
