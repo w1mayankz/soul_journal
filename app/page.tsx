@@ -81,7 +81,7 @@ export default function Dashboard() {
           <button className="flex h-12 w-12 items-center justify-center text-neutral-300 hover:text-white transition-colors active:scale-95">
             <Menu01Icon size={24} />
           </button>
-          <span className="text-[17px] font-medium tracking-tight">Dashboard</span>
+          <span className="text-[15px] font-medium tracking-tight">Dashboard</span>
         </div>
         
         <div className="flex items-center gap-3 pr-1">
@@ -145,7 +145,7 @@ export default function Dashboard() {
         <h1 className="text-[26px] font-medium tracking-tight">
           Welcome back, User
         </h1>
-        <p className="mt-[1px] text-[15px] font-semibold text-neutral-400 tracking-tight leading-none">
+        <p className="mt-[1px] text-[15px] font-semibold text-neutral-600 tracking-tight leading-none">
           Wed 09 Sep, 2026
         </p>
       </section>
@@ -156,13 +156,13 @@ export default function Dashboard() {
           
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-base font-medium tracking-tight text-neutral-400">
+              <p className="text-[15px] font-semibold tracking-tight text-neutral-600">
                 Account Balance
               </p>
               <h2 className="mt-[1px] text-[26px] font-medium tracking-tight">
                 {displayView === 'Hide P&L' ? '******' : '$50,640'}
               </h2>
-              <p className="mt-[1px] text-base font-medium tracking-tight text-neutral-500">
+              <p className="mt-[1px] text-[15px] font-semibold tracking-tight text-neutral-600">
                 Last {timeframe === 'Day' ? '24 Hours' : timeframe === 'Week' ? '7 Days' : timeframe === 'Month' ? '30 Days' : timeframe}
               </p>
             </div>
@@ -179,8 +179,9 @@ export default function Dashboard() {
               <AreaChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#22C55E" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#22C55E" stopOpacity={0} />
+                    {/* Changed gradient stops to #009C00 */}
+                    <stop offset="5%" stopColor="#009C00" stopOpacity={0.35} />
+                    <stop offset="95%" stopColor="#009C00" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis 
@@ -193,12 +194,14 @@ export default function Dashboard() {
                 />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#141414', borderColor: '#262626', borderRadius: '8px', color: '#fff', fontSize: '13px' }}
-                  itemStyle={{ color: '#22C55E' }}
+                  // Changed hover text color to #009C00
+                  itemStyle={{ color: '#009C00' }}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="value" 
-                  stroke="#22C55E" 
+                  // Changed main chart line to #009C00
+                  stroke="#009C00" 
                   strokeWidth={2}
                   fill="url(#colorValue)" 
                 />
@@ -210,7 +213,7 @@ export default function Dashboard() {
 
       {/* FLOATING ACTION BUTTON */}
       <button 
-        className="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-xl bg-green-500/15 backdrop-blur-xl border border-green-500/25 text-green-500 shadow-lg shadow-green-500/10 active:scale-95 transition-all z-50"
+        className="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#001A00] backdrop-blur-xl text-[#009C00] active:scale-95 transition-all z-50"
         aria-label="Log new trade"
       >
         <PlusSignIcon size={28} />
