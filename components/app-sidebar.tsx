@@ -55,18 +55,18 @@ export function AppSidebar() {
             <Link href="/" className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-colors ${pathname === '/' ? 'bg-[#141414] text-[15px] text-white' : 'text-[16px] text-white hover:bg-[#141414]'}`}>
               <GridIcon size={18} className={pathname === '/' ? 'text-neutral-300' : ''} /> Dashboard
             </Link>
-            <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[16px] font-medium text-white hover:bg-[#141414] hover:text-white">
-              <Calendar01Icon size={18} /> Calendar
-            </a>
+            <Link href="/calendar" className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-colors ${pathname === '/calendar' ? 'bg-[#141414] text-[15px] text-white' : 'text-[16px] text-white hover:bg-[#141414] hover:text-white'}`}>
+              <Calendar01Icon size={18} className={pathname === '/calendar' ? 'text-neutral-300' : ''} /> Calendar
+            </Link>
             <Link href="/trades" className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-colors ${pathname === '/trades' ? 'bg-[#141414] text-[15px] text-white' : 'text-[16px] text-white hover:bg-[#141414]'}`}>
               <Task01Icon size={18} className={pathname === '/trades' ? 'text-neutral-300' : ''} /> Trades
             </Link>
-            <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[16px] font-medium text-white hover:bg-[#141414] hover:text-white">
-              <Chart01Icon size={18} /> Analytics
-            </a>
-            <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[16px] font-medium text-white hover:bg-[#141414] hover:text-white">
-              <Briefcase01Icon size={18} /> Strategies
-            </a>
+            <Link href="/analytics" className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-colors ${pathname === '/analytics' ? 'bg-[#141414] text-[15px] text-white' : 'text-[16px] text-white hover:bg-[#141414] hover:text-white'}`}>
+              <Chart01Icon size={18} className={pathname === '/analytics' ? 'text-neutral-300' : ''} /> Analytics
+            </Link>
+            <Link href="/strategies" className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-colors ${pathname === '/strategies' ? 'bg-[#141414] text-[15px] text-white' : 'text-[16px] text-white hover:bg-[#141414] hover:text-white'}`}>
+              <Briefcase01Icon size={18} className={pathname === '/strategies' ? 'text-neutral-300' : ''} /> Strategies
+            </Link>
           </nav>
         </div>
 
