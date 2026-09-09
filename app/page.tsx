@@ -151,7 +151,7 @@ export default function Dashboard() {
       </section>
 
       {/* MAIN CHART CARD */}
-      <section className="mt-[1px] px-5">
+      <section className="mt-4 px-5">
         <div className="rounded-2xl border border-neutral-800/60 bg-[#0A0A0A] p-3 overflow-hidden">
           
           <div className="flex items-start justify-between">
