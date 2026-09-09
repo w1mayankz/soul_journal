@@ -89,7 +89,7 @@ export default function Dashboard() {
           <DropdownMenu.Root>
             <DropdownMenu.Trigger className="flex h-10 items-center gap-1.5 rounded-xl bg-[#141414] px-3 text-[14px] font-medium text-neutral-300 hover:bg-[#222] transition-colors active:scale-95 outline-none">
               {timeframe}
-              <ArrowDown01Icon size={16} className="text-neutral-500" />
+              <ArrowDown01Icon size={16} className="text-white" />
             </DropdownMenu.Trigger>
             <DropdownMenu.Portal>
               <DropdownMenu.Content 
@@ -145,18 +145,18 @@ export default function Dashboard() {
         <h1 className="text-[26px] font-medium tracking-tight">
           Welcome back, User
         </h1>
-        <p className="mt-[2px] text-base font-medium text-neutral-400 tracking-tight">
+        <p className="mt-[3px] text-base font-medium text-neutral-400 tracking-tight">
           Wed 09 Sep, 2026
         </p>
       </section>
 
       {/* MAIN CHART CARD */}
-      <section className="mt-[2px] px-5">
+      <section className="mt-[3px] px-5">
         <div className="rounded-2xl border border-neutral-800/60 bg-[#0A0A0A] p-5 shadow-sm">
           
           <div className="flex items-start justify-between">
             <div>
-              <p className="mt-[2px] text-base font-medium tracking-tight text-neutral-400">
+              <p className="text-base font-medium tracking-tight text-neutral-400">
                 Account Balance
               </p>
               <h2 className="mt-[2px] text-[26px] font-medium tracking-tight">
