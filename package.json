@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start"
   },
-  "dependencies": {
+    "dependencies": {
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
@@ -16,9 +16,12 @@
     "tailwind-merge": "latest",
     "@radix-ui/react-dropdown-menu": "latest",
     "@radix-ui/react-dialog": "latest",
+    "@radix-ui/react-popover": "latest",
+    "@radix-ui/react-tabs": "latest",
     "recharts": "latest",
     "date-fns": "latest",
-    "tailwindcss-animate": "latest"
+    "tailwindcss-animate": "latest",
+    "react-day-picker": "latest"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.17",
