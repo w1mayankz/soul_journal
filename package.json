@@ -17,7 +17,8 @@
     "@radix-ui/react-dropdown-menu": "latest",
     "@radix-ui/react-dialog": "latest",
     "recharts": "latest",
-    "date-fns": "latest"
+    "date-fns": "latest",
+    "tailwindcss-animate": "latest"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.17",
