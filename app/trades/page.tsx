@@ -44,15 +44,15 @@ export default function TradesPage() {
 
       {/* TRADE LOG CARD */}
       <section className="mt-6 px-4">
-        <div className="rounded-2xl border border-neutral-800/60 bg-[#0A0A0A] p-4 shadow-sm">
+        <div className="rounded-2xl border border-neutral-800/60 bg-[#090909] p-4">
           
           {/* Card Header & Controls */}
           <div className="mb-4 flex items-start justify-between">
             <div>
-              <h2 className="text-[17px] font-medium tracking-tight">Trade Log</h2>
-              <p className="mt-0.5 text-[13px] text-neutral-500">Select a trade to view its details</p>
+              <h2 className="text-[18px] font-medium tracking-tight">Trade Log</h2>
+              <p className="mt-0.5 text-[12px] font-semibold text-neutral-400">Select a trade to view its details</p>
             </div>
-            <div className="flex gap-3 text-neutral-400">
+            <div className="flex gap-3 text-white">
               <button className="hover:text-white transition-colors active:scale-95 outline-none">
                 <Menu05Icon size={18} />
               </button>
@@ -64,21 +64,21 @@ export default function TradesPage() {
 
           {/* Table Header (Pill) */}
           <div className="mb-2 grid grid-cols-[1.5fr_1fr_1fr] rounded-xl bg-[#141414] px-4 py-2.5">
-            <span className="text-[12px] font-medium text-neutral-400">Entry date</span>
-            <span className="text-center text-[12px] font-medium text-neutral-400">Symbol</span>
-            <span className="text-right text-[12px] font-medium text-neutral-400">P&L</span>
+            <span className="text-[14px] font-medium text-neutral-600">Entry date</span>
+            <span className="text-center text-[14px] font-medium text-neutral-600">Symbol</span>
+            <span className="text-right text-[14px] font-medium text-neutral-600">P&L</span>
           </div>
 
           {/* Dummy Trade Row 1 */}
           <button className="flex w-full grid grid-cols-[1.5fr_1fr_1fr] items-center px-4 py-3 hover:bg-[#141414] transition-colors rounded-xl outline-none group text-left">
-            <span className="text-[13px] font-medium text-neutral-300 group-hover:text-white transition-colors">
+            <span className="text-[14px] font-semibold text-neutral-300">
               09/09/2026 15:53
             </span>
-            <span className="text-center text-[13px] font-medium text-white">
+            <span className="text-center text-[14px] font-medium text-white">
               NAS100
             </span>
             <div className="flex justify-end">
-              <div className="flex items-center gap-1 rounded-md bg-[#009C00]/15 px-2 py-1 text-[12px] font-medium text-[#009C00]">
+              <div className="flex items-center gap-1 rounded-md bg-[#009C00]/15 px-2 py-1 text-[15px] font-medium text-[#009C00]">
                 <ArrowUp02Icon size={12} />
                 $861
               </div>
@@ -119,7 +119,7 @@ export default function TradesPage() {
 
       {/* FLOATING ACTION BUTTON */}
       <button 
-        className="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-[#009C00]/15 backdrop-blur-xl border border-[#009C00]/30 text-[#009C00] shadow-lg shadow-[#009C00]/10 active:scale-95 transition-all z-50 outline-none"
+        className="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#009C00]/15 backdrop-blur-xl border border-[#009C00]/30 text-[#009C00] shadow-lg shadow-[#009C00]/10 active:scale-95 transition-all z-50 outline-none"
         aria-label="Log new trade"
       >
         <PlusSignIcon size={28} />
