@@ -14,6 +14,8 @@ import {
   ViewOffSlashIcon,
   ArrowDown01Icon
 } from 'hugeicons-react';
+import * as Dialog from '@radix-ui/react-dialog';
+import { AppSidebar } from '@/components/app-sidebar';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import { subDays, subHours, subMonths, subYears, format } from 'date-fns';
