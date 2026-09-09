@@ -94,14 +94,14 @@ export function AppSidebar() {
       {/* STICKY FOOTER */}
       <div className="bg-[#000000] p-4 pt-2">
         <button className="flex w-full items-center gap-3 rounded-xl p-2 transition-colors hover:bg-[#141414] outline-none">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#1A1A1A] text-[15px] font-semibold text-white">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#1A1A1A] text-[16px] font-medium text-white">
             C
           </div>
           <div className="flex flex-col items-start text-left">
-            <span className="text-[14px] font-medium leading-none text-white">cow</span>
-            <span className="mt-1.5 text-[12px] leading-none text-neutral-500 truncate w-32">stupidmoneyconcepts...</span>
+            <span className="text-[16px] font-medium leading-none text-white">siz</span>
+            <span className="mt-1.5 text-[12px] leading-none font-semibold text-neutral-500 truncate w-32">stupidmoneyconcepts...</span>
           </div>
-          <MoreHorizontalIcon size={18} className="ml-auto text-neutral-500" />
+          <MoreHorizontalIcon size={20} className="ml-auto text-white" />
         </button>
       </div>
       
