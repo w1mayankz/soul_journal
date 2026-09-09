@@ -142,10 +142,10 @@ export default function Dashboard() {
 
       {/* HEADER SECTION */}
       <section className="mt-6 px-5">
-        <h1 className="text-[26px] font-medium tracking-tight">
+        <h1 className="text-[30px] font-medium tracking-tight">
           Welcome back, cow
         </h1>
-        <p className="mt-1 text-[14px] font-normal text-neutral-400 tracking-tight">
+        <p className="mt-1 text-base font-medium text-neutral-400 tracking-tight">
           Wed 09 Sep, 2026
         </p>
       </section>
@@ -156,18 +156,18 @@ export default function Dashboard() {
           
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-[13px] font-medium tracking-wide text-neutral-400">
+              <p className="text-base font-medium tracking-tight text-neutral-400">
                 Account Balance
               </p>
-              <h2 className="mt-1.5 text-[28px] font-semibold tracking-tight">
+              <h2 className="mt-1.5 text-[30px] font-medium tracking-tight">
                 {displayView === 'Hide P&L' ? '******' : '$50,640'}
               </h2>
-              <p className="mt-1 text-[13px] text-neutral-500">
+              <p className="mt-1 text-base font-medium tracking-tight text-neutral-500">
                 Last {timeframe === 'Day' ? '24 Hours' : timeframe === 'Week' ? '7 Days' : timeframe === 'Month' ? '30 Days' : timeframe}
               </p>
             </div>
             {displayView !== 'Hide P&L' && (
-              <div className="flex items-center rounded-md bg-green-500/10 px-2 py-1 text-[13px] font-medium text-green-500">
+              <div className="flex items-center rounded-md bg-green-500/10 px-2 py-1 text-base font-medium tracking-tight text-green-500">
                 +$640
               </div>
             )}
@@ -210,7 +210,7 @@ export default function Dashboard() {
 
       {/* FLOATING ACTION BUTTON */}
       <button 
-        className="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-green-500/15 backdrop-blur-xl border border-green-500/25 text-green-500 shadow-lg shadow-green-500/10 active:scale-95 transition-all z-50"
+        className="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-xl bg-green-500/15 backdrop-blur-xl border border-green-500/25 text-green-500 shadow-lg shadow-green-500/10 active:scale-95 transition-all z-50"
         aria-label="Log new trade"
       >
         <PlusSignIcon size={28} />
