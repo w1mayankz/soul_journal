@@ -145,13 +145,13 @@ export default function Dashboard() {
         <h1 className="text-[26px] font-medium tracking-tight">
           Welcome back, User
         </h1>
-        <p className="mt-[1px] text-base font-medium text-neutral-400 tracking-tight">
+        <p className="mt-[1px] text-base font-medium text-neutral-400 tracking-tight leading-none">
           Wed 09 Sep, 2026
         </p>
       </section>
 
       {/* MAIN CHART CARD */}
-      <section className="mt-2 px-5">
+      <section className="mt-[1px] px-5">
         <div className="rounded-2xl border border-neutral-800/60 bg-[#0A0A0A] p-3 overflow-hidden">
           
           <div className="flex items-start justify-between">
