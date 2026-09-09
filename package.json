@@ -13,7 +13,10 @@
     "react-dom": "latest",
     "hugeicons-react": "latest",
     "clsx": "latest",
-    "tailwind-merge": "latest"
+    "tailwind-merge": "latest",
+    "@radix-ui/react-dropdown-menu": "latest",
+    "recharts": "latest",
+    "date-fns": "latest"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.17",
