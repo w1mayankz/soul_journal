@@ -54,7 +54,7 @@ export default function TradesPage() {
           <div className="mb-4 flex items-start justify-between">
             <div>
               <h2 className="text-[18px] font-medium tracking-tight">Trade Log</h2>
-              <p className="mt-0.5 text-[12px] font-semibold text-neutral-400">Select a trade to view its details</p>
+              <p className="mt-0.5 text-[14px] font-semibold text-neutral-400">Select a trade to view its details</p>
             </div>
             <div className="flex gap-3 text-white">
               <button className="hover:text-white transition-colors active:scale-95 outline-none">
@@ -68,17 +68,17 @@ export default function TradesPage() {
 
           {/* Table Header (Pill) */}
           <div className="mb-2 grid grid-cols-[1.5fr_1fr_1fr] rounded-xl bg-[#141414] px-4 py-2.5">
-            <span className="text-[14px] font-medium text-neutral-600">Entry date</span>
-            <span className="text-center text-[14px] font-medium text-neutral-600">Symbol</span>
-            <span className="text-right text-[14px] font-medium text-neutral-600">P&L</span>
+            <span className="text-[15px] font-medium text-neutral-600">Entry date</span>
+            <span className="text-center text-[15px] font-medium text-neutral-600">Symbol</span>
+            <span className="text-right text-[15px] font-medium text-neutral-600">P&L</span>
           </div>
 
           {/* Dummy Trade Row 1 */}
           <button className="flex w-full grid grid-cols-[1.5fr_1fr_1fr] items-center px-4 py-3 hover:bg-[#141414] transition-colors rounded-xl outline-none group text-left">
-            <span className="text-[14px] font-semibold text-neutral-300">
+            <span className="text-[15px] font-semibold text-neutral-300">
               09/09/2026 15:53
             </span>
-            <span className="text-center text-[14px] font-medium text-white">
+            <span className="text-center text-[15px] font-medium text-white">
               NAS100
             </span>
             <div className="flex justify-end">
