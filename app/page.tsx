@@ -15,37 +15,8 @@ import {
 } from 'hugeicons-react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
-import { subDays, subHours, subMonths, subYears, format } from 'date-fns';
+import { format } from 'date-fns';
 import { useTrades } from '../context/trades-context';
-
-// Dynamic data generation anchored to Sept 9, 2026
-const generateChartData = (timeframe: string) => {
-  const baseDate = new Date(2026, 8, 9); // Month is 0-indexed (8 = September)
-  const data = [];
-  
-  if (timeframe === 'Day') {
-    for (let i = 24; i >= 0; i--) {
-      data.push({ time: format(subHours(baseDate, i), 'ha'), value: 50000 + (Math.random() * 1000) });
-    }
-  } else if (timeframe === 'Week') {
-    for (let i = 7; i >= 0; i--) {
-      data.push({ time: format(subDays(baseDate, i), 'MMM dd'), value: 50000 + (Math.random() * 2000) });
-    }
-  } else if (timeframe === 'Month') {
-    for (let i = 30; i >= 0; i--) {
-      data.push({ time: format(subDays(baseDate, i), 'MMM dd'), value: 48000 + (Math.random() * 5000) });
-    }
-  } else if (timeframe === 'Year') {
-    for (let i = 12; i >= 0; i--) {
-      data.push({ time: format(subMonths(baseDate, i), 'MMM yyyy'), value: 40000 + (Math.random() * 15000) });
-    }
-  } else {
-    for (let i = 5; i >= 0; i--) {
-      data.push({ time: format(subYears(baseDate, i), 'yyyy'), value: 20000 + (Math.random() * 40000) });
-    }
-  }
-  return data;
-};
 
 export default function Dashboard() {
   const [timeframe, setTimeframe] = useState('Week');
@@ -53,15 +24,38 @@ export default function Dashboard() {
   
   const { trades } = useTrades();
   
-  // Calculate real balances dynamically from Context
+  const startingBalance = 50000;
   const totalRealPnl = trades.reduce((sum, trade) => sum + trade.pnl, 0);
-  const realBalance = 50000 + totalRealPnl;
+  const realBalance = startingBalance + totalRealPnl;
 
-  const chartData = generateChartData(timeframe);
-  
-  // Anchor the chart's current end point to the real money balance
-  chartData[chartData.length - 2].value = realBalance;
-  chartData[chartData.length - 1].value = realBalance;
+  // Builds a real equity curve dynamically based on your actual trades
+  const buildEquityCurve = () => {
+    if (trades.length === 0) {
+      // Flat line if no trades exist yet
+      return [
+        { time: 'Start', value: startingBalance },
+        { time: 'Now', value: startingBalance }
+      ];
+    }
+
+    // Sort trades oldest to newest
+    const sortedTrades = [...trades].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+    let runningBalance = startingBalance;
+    const curve = [{ time: 'Start', value: startingBalance }];
+    
+    sortedTrades.forEach(t => {
+      runningBalance += t.pnl;
+      curve.push({
+        time: format(new Date(t.date), 'MMM dd'),
+        value: runningBalance
+      });
+    });
+    
+    return curve;
+  };
+
+  const chartData = buildEquityCurve();
 
   return (
     <div className="relative min-h-screen bg-black pb-24 font-sans text-white">
@@ -124,10 +118,10 @@ export default function Dashboard() {
       {/* HEADER SECTION */}
       <section className="mt-6 px-5">
         <h1 className="text-[26px] font-medium tracking-tight">
-          Welcome back, User
+          Welcome back, cow
         </h1>
         <p className="mt-[1px] text-[15px] font-semibold text-neutral-600 tracking-tight leading-none">
-          Wed 09 Sep, 2026
+          {format(new Date(), 'EEE dd MMM, yyyy')}
         </p>
       </section>
 
@@ -147,9 +141,9 @@ export default function Dashboard() {
                 Last {timeframe === 'Day' ? '24 Hours' : timeframe === 'Week' ? '7 Days' : timeframe === 'Month' ? '30 Days' : timeframe}
               </p>
             </div>
-            {displayView !== 'Hide P&L' && (
-              <div className={`flex items-center rounded-md px-2 py-1 text-base font-medium tracking-tight ${totalRealPnl >= 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
-                {totalRealPnl >= 0 ? '+' : '-'}${Math.abs(totalRealPnl).toLocaleString()}
+            {displayView !== 'Hide P&L' && totalRealPnl !== 0 && (
+              <div className={`flex items-center rounded-md px-2 py-1 text-base font-medium tracking-tight ${totalRealPnl > 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                {totalRealPnl > 0 ? '+' : '-'}${Math.abs(totalRealPnl).toLocaleString()}
               </div>
             )}
           </div>
