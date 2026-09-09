@@ -15,6 +15,7 @@
     "clsx": "latest",
     "tailwind-merge": "latest",
     "@radix-ui/react-dropdown-menu": "latest",
+    "@radix-ui/react-dialog": "latest",
     "recharts": "latest",
     "date-fns": "latest"
   },
