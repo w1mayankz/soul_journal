@@ -77,14 +77,26 @@ export default function Dashboard() {
   return (
     <div className="relative min-h-screen bg-black pb-24 font-sans text-white">
       
-      {/* TOP NAVBAR */}
+     {/* TOP NAVBAR */}
       <header className="flex h-14 items-center justify-between px-4 pt-2">
         <div className="flex items-center gap-1">
-          <button className="flex h-12 w-12 items-center justify-center text-neutral-300 hover:text-white transition-colors active:scale-95">
-            <Menu01Icon size={24} />
-          </button>
+          
+          <Dialog.Root>
+            <Dialog.Trigger asChild>
+              <button className="flex h-12 w-12 items-center justify-center text-neutral-300 hover:text-white transition-colors active:scale-95 outline-none">
+                <Menu01Icon size={24} />
+              </button>
+            </Dialog.Trigger>
+            <Dialog.Portal>
+              <Dialog.Overlay className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+              <Dialog.Content className="fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col bg-black outline-none transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left shadow-2xl border-r border-neutral-800/60">
+                <AppSidebar />
+              </Dialog.Content>
+            </Dialog.Portal>
+          </Dialog.Root>
           <span className="text-[15px] font-medium tracking-tight">Dashboard</span>
         </div>
+
         
         <div className="flex items-center gap-3 pr-1">
           {/* TIMEFRAME DROPDOWN (SHADCN RADIX) */}
