@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { TopNavbar } from '../../components/top-navbar';
+import { AddAccountModal } from '../../components/add-account-modal'; // <--- Import it here
 import { 
   DollarSquareIcon, 
   PercentIcon,
   ViewOffSlashIcon,
   ArrowDown01Icon,
-  RefreshIcon, // Changed from Sync01Icon
+  RefreshIcon,
   PlusSignIcon
 } from 'hugeicons-react';
 
@@ -86,10 +87,13 @@ export default function AccountsPage() {
 
       {/* EMPTY ACCOUNTS AREA */}
       <section className="mt-4 px-4">
-        <button className="flex min-h-[160px] w-full flex-col items-center justify-center gap-2 rounded-2xl border border-neutral-800/60 bg-[#090909] transition-colors hover:bg-[#141414] active:scale-[0.99] outline-none shadow-sm">
-          <PlusSignIcon size={24} className="text-neutral-500" />
-          <span className="text-[14px] font-medium text-neutral-500">Add Account</span>
-        </button>
+        {/* WE WRAPPED THE BUTTON IN THE MODAL COMPONENT */}
+        <AddAccountModal>
+          <button className="flex min-h-[160px] w-full flex-col items-center justify-center gap-2 rounded-2xl border border-neutral-800/60 bg-[#090909] transition-colors hover:bg-[#141414] active:scale-[0.99] outline-none shadow-sm">
+            <PlusSignIcon size={24} className="text-neutral-500" />
+            <span className="text-[14px] font-medium text-neutral-500">Add Account</span>
+          </button>
+        </AddAccountModal>
       </section>
 
     </div>
