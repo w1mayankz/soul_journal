@@ -8,7 +8,7 @@ import {
   PercentIcon,
   ViewOffSlashIcon,
   ArrowDown01Icon,
-  Sync01Icon,
+  RefreshIcon, // Changed from Sync01Icon
   PlusSignIcon
 } from 'hugeicons-react';
 
@@ -66,7 +66,7 @@ export default function AccountsPage() {
 
         {/* Sync Button */}
         <button className="flex h-10 items-center gap-2 rounded-xl bg-[#141414] px-3.5 text-[14px] font-medium text-white outline-none transition-colors hover:bg-[#1A1A1A] active:scale-95">
-          <Sync01Icon size={16} className="text-white" />
+          <RefreshIcon size={16} className="text-white" />
           Sync all
         </button>
       </div>
