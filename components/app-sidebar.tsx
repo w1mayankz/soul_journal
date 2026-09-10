@@ -19,9 +19,10 @@ import { useTrades } from '../context/trades-context';
 export function AppSidebar() {
   const pathname = usePathname();
   
-  // Pull real account data from context
-  const { accounts } = useTrades();
-  const activeAccount = accounts.find(a => a.isStarred) || accounts[0];
+  const { accounts, activeAccountId } = useTrades();
+  
+  // Pulls the Active account instead of starred
+  const activeAccount = accounts.find(a => a.id === activeAccountId);
   
   // Dynamic display values
   const displayName = activeAccount ? activeAccount.name : 'All Accounts';
