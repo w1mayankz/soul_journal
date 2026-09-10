@@ -145,27 +145,31 @@ export default function AccountsPage() {
                   </div>
                   
                   {/* REFINED GRAY STRIP WITH SQUARE BUTTONS */}
-                  <div className="flex flex-col items-center gap-2 rounded-xl bg-[#141414] p-1.5 ml-2 z-10 border border-neutral-800/60 shadow-sm">
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); toggleStarAccount(acc.id); }} 
-                      className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#1A1A1A] hover:bg-[#262626] transition-colors outline-none"
-                    >
-                      <StarIcon size={18} className={acc.isStarred ? "text-orange-500 fill-orange-500" : "text-neutral-400"} />
-                    </button>
+                  <div className="flex flex-col items-center self-stretch rounded-xl bg-[#141414] p-1.5 ml-2 z-10 border border-neutral-800/60 shadow-sm">
                     
-                    <button 
-                      onClick={(e) => e.stopPropagation()} 
-                      className="flex h-9 w-9 items-center justify-center rounded-lg hover:bg-[#1A1A1A] transition-colors outline-none"
-                    >
-                      <Download01Icon size={18} className="text-neutral-400" />
-                    </button>
+                    {/* Top Grouped Icons */}
+                    <div className="flex flex-col gap-1.5">
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); toggleStarAccount(acc.id); }} 
+                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#1A1A1A] hover:bg-[#262626] transition-colors outline-none"
+                      >
+                        <StarIcon size={16} className={acc.isStarred ? "text-orange-500 fill-orange-500" : "text-neutral-400"} />
+                      </button>
+                      
+                      <button 
+                        onClick={(e) => e.stopPropagation()} 
+                        className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-[#1A1A1A] transition-colors outline-none"
+                      >
+                        <Download01Icon size={16} className="text-neutral-400" />
+                      </button>
+                    </div>
                     
-                    {/* DROPDOWN MENU IMPLEMENTATION */}
-                    <div onClick={(e) => e.stopPropagation()}>
+                    {/* DROPDOWN MENU IMPLEMENTATION - Pushed to Bottom */}
+                    <div className="mt-auto" onClick={(e) => e.stopPropagation()}>
                       <DropdownMenu.Root>
                         <DropdownMenu.Trigger asChild>
-                          <button className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#1A1A1A] hover:bg-[#262626] transition-colors outline-none">
-                            <Menu01Icon size={18} className="text-neutral-400" />
+                          <button className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#1A1A1A] hover:bg-[#262626] transition-colors outline-none">
+                            <Menu01Icon size={16} className="text-neutral-400" />
                           </button>
                         </DropdownMenu.Trigger>
                         <DropdownMenu.Portal>
@@ -195,8 +199,8 @@ export default function AccountsPage() {
                         </DropdownMenu.Portal>
                       </DropdownMenu.Root>
                     </div>
-
                   </div>
+
                 </div>
               );
             })}
