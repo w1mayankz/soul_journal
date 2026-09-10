@@ -14,8 +14,8 @@ import {
   ArrowDown01Icon
 } from 'hugeicons-react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
-import { format } from 'date-fns';
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { subDays, subHours, subMonths, subYears, format } from 'date-fns';
 import { useTrades } from '../context/trades-context';
 
 export default function Dashboard() {
@@ -28,31 +28,47 @@ export default function Dashboard() {
   const totalRealPnl = trades.reduce((sum, trade) => sum + trade.pnl, 0);
   const realBalance = startingBalance + totalRealPnl;
 
-  // Builds a real equity curve dynamically based on your actual trades
   const buildEquityCurve = () => {
-    if (trades.length === 0) {
-      // Flat line if no trades exist yet
-      return [
-        { time: 'Start', value: startingBalance },
-        { time: 'Now', value: startingBalance }
-      ];
-    }
+    const baseDate = new Date();
+    const data = [];
+    
+    const getBalanceAtDate = (dateLimit: Date) => {
+      const pnl = trades
+        .filter(t => new Date(t.date).getTime() <= dateLimit.getTime())
+        .reduce((sum, t) => sum + t.pnl, 0);
+      return startingBalance + pnl;
+    };
 
-    // Sort trades oldest to newest
-    const sortedTrades = [...trades].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    if (timeframe === 'Day') {
+      for (let i = 24; i >= 0; i--) {
+        const d = subHours(baseDate, i);
+        data.push({ time: format(d, 'ha'), value: getBalanceAtDate(d) });
+      }
+    } else if (timeframe === 'Week') {
+      for (let i = 7; i >= 0; i--) {
+        const d = subDays(baseDate, i);
+        data.push({ time: format(d, 'MMM dd'), value: getBalanceAtDate(d) });
+      }
+    } else if (timeframe === 'Month') {
+      for (let i = 30; i >= 0; i--) {
+        const d = subDays(baseDate, i);
+        data.push({ time: format(d, 'MMM dd'), value: getBalanceAtDate(d) });
+      }
+    } else if (timeframe === 'Year') {
+      for (let i = 12; i >= 0; i--) {
+        const d = subMonths(baseDate, i);
+        data.push({ time: format(d, 'MMM yyyy'), value: getBalanceAtDate(d) });
+      }
+    } else {
+      for (let i = 5; i >= 0; i--) {
+        const d = subYears(baseDate, i);
+        data.push({ time: format(d, 'yyyy'), value: getBalanceAtDate(d) });
+      }
+    }
     
-    let runningBalance = startingBalance;
-    const curve = [{ time: 'Start', value: startingBalance }];
+    data[data.length - 1].value = realBalance;
     
-    sortedTrades.forEach(t => {
-      runningBalance += t.pnl;
-      curve.push({
-        time: format(new Date(t.date), 'MMM dd'),
-        value: runningBalance
-      });
-    });
-    
-    return curve;
+    return data;
   };
 
   const chartData = buildEquityCurve();
@@ -166,9 +182,14 @@ export default function Dashboard() {
                   minTickGap={35} 
                   dy={10}
                 />
+                <YAxis 
+                  domain={['dataMin - 100', 'dataMax + 100']} 
+                  hide 
+                />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#141414', borderColor: '#262626', borderRadius: '8px', color: '#fff', fontSize: '13px' }}
                   itemStyle={{ color: '#009C00' }}
+                  formatter={(value: any) => [`$${Number(value).toLocaleString()}`, 'Balance']}
                 />
                 <Area 
                   type="monotone" 
