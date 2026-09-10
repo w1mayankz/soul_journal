@@ -33,6 +33,27 @@ export function AddTradeModal() {
   const [reward, setReward] = useState(1);
   const [rrInput, setRrInput] = useState('1:1');
 
+  // COMPLETELY RESETS ALL FIELDS
+  const resetForm = () => {
+    setSymbol('');
+    setSymbolSearch('');
+    setDate(new Date());
+    setTime("09:30");
+    setSide('buy');
+    setPnl('');
+    setPnlError(false);
+    setRisk(1);
+    setReward(1);
+    setRrInput('1:1');
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open) {
+      setTimeout(resetForm, 300); // Wipes data after close animation
+    }
+  };
+
   const filteredSymbols = SYMBOLS.filter(s => s.toLowerCase().includes(symbolSearch.toLowerCase()));
 
   const handlePnlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +63,6 @@ export function AddTradeModal() {
     setPnl(val);
   };
 
-  // RR Input Logic (Manual Typing)
   const handleRrInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setRrInput(val);
@@ -57,11 +77,9 @@ export function AddTradeModal() {
     }
   };
 
-  // RR Slider Logic (Interactive Sliding)
   const handleRrSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const p = parseFloat(e.target.value) / 100;
     
-    // Snap cleanly to 1:1 in the middle
     if (Math.abs(p - 0.5) < 0.01) {
       setRisk(1);
       setReward(1);
@@ -89,26 +107,23 @@ export function AddTradeModal() {
 
     addTrade({
       id: Date.now(),
-      accountId: activeAccountId, // Saves directly to selected account
+      accountId: activeAccountId,
       date: `${format(date, 'yyyy/MM/dd')} ${time}`,
       symbol,
       side,
       pnl: parsedPnl
-      // risk, reward can also be passed here later if you update the Trade context schema
     });
     
-    setPnl('');
-    setSymbol('');
     setIsOpen(false);
+    setTimeout(resetForm, 300); // Wipes data after successful save
   };
 
-  // Dynamically calculate the visual widths for the split bar
   const redPercent = (risk / (risk + reward)) * 100;
   const greenPercent = (reward / (risk + reward)) * 100;
   const isDefaultRr = risk === 1 && reward === 1;
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog.Root open={isOpen} onOpenChange={handleOpenChange}>
       <Dialog.Trigger asChild>
         <button 
           className="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#001A00] backdrop-blur-xl text-[#009C00] active:scale-95 transition-all z-30 outline-none"
@@ -218,7 +233,7 @@ export function AddTradeModal() {
             {/* SIDE */}
             <div className="flex flex-col gap-2">
               <label className="text-[14px] font-medium text-white">Side *</label>
-              <Tabs.Root defaultValue={side} onValueChange={setSide}>
+              <Tabs.Root value={side} onValueChange={setSide}>
                 <Tabs.List className="flex w-[160px] gap-1 rounded-xl bg-[#141414] p-1">
                   <Tabs.Trigger value="buy" className="flex-1 rounded-lg py-2 text-[13px] font-semibold text-neutral-500 transition-all data-[state=active]:bg-[#262626] data-[state=active]:text-white outline-none">
                     Buy ↑
@@ -245,7 +260,7 @@ export function AddTradeModal() {
               </div>
             </div>
 
-            {/* NEW RISK/REWARD SLIDER BLOCK */}
+            {/* RISK/REWARD SLIDER BLOCK */}
             <div className="flex flex-col gap-2 pt-1">
               <label className="text-[14px] font-medium text-white">Risk/Reward ratio</label>
               <div className="flex items-center gap-3">
@@ -257,19 +272,9 @@ export function AddTradeModal() {
                 />
                 
                 <div className="relative flex h-3.5 flex-1 items-center gap-[2px]">
-                  {/* Left Red Track */}
-                  <div 
-                    className="h-full rounded-l-full bg-[#F44336]" 
-                    style={{ width: `${redPercent}%` }}
-                  ></div>
-                  
-                  {/* Right Green Track */}
-                  <div 
-                    className="h-full rounded-r-full bg-[#009C00]" 
-                    style={{ width: `${greenPercent}%` }}
-                  ></div>
+                  <div className="h-full rounded-l-full bg-[#F44336]" style={{ width: `${redPercent}%` }}></div>
+                  <div className="h-full rounded-r-full bg-[#009C00]" style={{ width: `${greenPercent}%` }}></div>
 
-                  {/* Invisible Drag Overlay capped between 1:26 and 26:1 */}
                   <input
                     type="range"
                     min="3.7"
@@ -281,7 +286,6 @@ export function AddTradeModal() {
                   />
                 </div>
                 
-                {/* Reset Cross Icon */}
                 <div className="w-5 flex justify-center">
                   {!isDefaultRr && (
                     <button
