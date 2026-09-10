@@ -20,9 +20,8 @@ import {
 export default function AccountsPage() {
   const [displayView, setDisplayView] = useState('Money View');
   
-  const { accounts, trades, toggleStarAccount } = useTrades();
+  const { accounts, trades, toggleStarAccount, activeAccountId, setActiveAccount } = useTrades();
   
-  // Dynamically sum up the balance of all accounts
   const totalPortfolioValue = accounts.reduce((sum, acc) => sum + acc.currentBalance, 0);
 
   return (
@@ -75,7 +74,6 @@ export default function AccountsPage() {
         </button>
       </div>
 
-      {/* TOTAL PORTFOLIO VALUE CARD */}
       <section className="mt-4 px-4">
         <div className="rounded-2xl border border-neutral-800/60 bg-[#090909] p-4 shadow-sm">
           <h3 className="text-[15px] font-medium text-white tracking-tight">Total Portfolio Value</h3>
@@ -88,7 +86,6 @@ export default function AccountsPage() {
         </div>
       </section>
 
-      {/* DYNAMIC ACCOUNTS AREA */}
       <section className="mt-4 px-4 flex flex-col gap-3">
         {accounts.length === 0 ? (
           <AddAccountModal>
@@ -100,16 +97,19 @@ export default function AccountsPage() {
         ) : (
           <>
             {accounts.map(acc => {
-              // Connects to actual trades to get real count
               const tradesCount = trades.filter(t => t.accountId === acc.id).length;
               const hasTag = acc.accountType && acc.accountType !== 'None';
               const isOrangeTag = ['Live Funded', 'Demo'].includes(acc.accountType);
+              const isActive = acc.id === activeAccountId;
 
               return (
-                <div key={acc.id} className="flex justify-between rounded-2xl border border-neutral-800/60 bg-[#090909] p-4 shadow-sm">
+                <div 
+                  key={acc.id} 
+                  onClick={() => setActiveAccount(acc.id)}
+                  className={`flex justify-between rounded-2xl border ${isActive ? 'border-[#009C00] shadow-[0_0_15px_rgba(0,156,0,0.05)]' : 'border-neutral-800/60'} bg-[#090909] p-4 shadow-sm cursor-pointer transition-all hover:bg-[#111]`}
+                >
                   <div className="flex flex-col flex-1">
                     <div className="flex items-center gap-2.5">
-                      {/* Name pulsing dot is ALWAYS green */}
                       <div className="relative flex h-2 w-2">
                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#009C00] opacity-75"></span>
                         <span className="relative inline-flex h-2 w-2 rounded-full bg-[#009C00]"></span>
@@ -132,7 +132,6 @@ export default function AccountsPage() {
                         <span className="text-[13px] font-medium text-neutral-500">${acc.initialBalance.toLocaleString()}</span>
                       </div>
                       
-                      {/* Dynamic Tag rendering logic */}
                       {hasTag && (
                         <div className="flex items-center gap-1.5 rounded-lg border border-neutral-800/60 bg-[#141414] px-2.5 py-1">
                           <span className={`h-1.5 w-1.5 rounded-full ${isOrangeTag ? 'bg-[#F59E0B]' : 'bg-[#009C00]'}`}></span>
@@ -142,15 +141,14 @@ export default function AccountsPage() {
                     </div>
                   </div>
                   
-                  {/* Right side control column */}
-                  <div className="flex flex-col items-center justify-between rounded-xl border border-neutral-800/60 bg-[#141414] overflow-hidden ml-3">
-                    <button onClick={() => toggleStarAccount(acc.id)} className="p-2.5 hover:bg-[#1A1A1A] transition-colors border-b border-neutral-800/60 outline-none">
+                  <div className="flex flex-col items-center justify-between rounded-xl border border-neutral-800/60 bg-[#141414] overflow-hidden ml-3 z-10">
+                    <button onClick={(e) => { e.stopPropagation(); toggleStarAccount(acc.id); }} className="p-2.5 hover:bg-[#1A1A1A] transition-colors border-b border-neutral-800/60 outline-none">
                       <StarIcon size={18} className={acc.isStarred ? "text-orange-500 fill-orange-500" : "text-neutral-400"} />
                     </button>
-                    <button className="p-2.5 hover:bg-[#1A1A1A] transition-colors border-b border-neutral-800/60 outline-none">
+                    <button onClick={(e) => e.stopPropagation()} className="p-2.5 hover:bg-[#1A1A1A] transition-colors border-b border-neutral-800/60 outline-none">
                       <Download01Icon size={18} className="text-neutral-400" />
                     </button>
-                    <button className="p-2.5 hover:bg-[#1A1A1A] transition-colors outline-none">
+                    <button onClick={(e) => e.stopPropagation()} className="p-2.5 hover:bg-[#1A1A1A] transition-colors outline-none">
                       <Menu01Icon size={18} className="text-neutral-400" />
                     </button>
                   </div>
