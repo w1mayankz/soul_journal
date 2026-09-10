@@ -33,25 +33,29 @@ export function AddAccountModal({ children }: { children: React.ReactNode }) {
   const [accountType, setAccountType] = useState('');
   const [accountTypeOpen, setAccountTypeOpen] = useState(false);
 
+  // COMPLETELY RESETS ALL FIELDS
+  const resetForm = () => {
+    setStep(1);
+    setIsAdvancedOpen(false);
+    setName('');
+    setInitialBalance('');
+    setCurrentBalance('');
+    setBreakeven('0.1%');
+    setCustomBreakeven('');
+    setAccountType('');
+  };
+
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
     if (!open) {
-      setTimeout(() => {
-        setStep(1);
-        setIsAdvancedOpen(false);
-        setName('');
-        setInitialBalance('');
-        setCurrentBalance('');
-        setAccountType('');
-      }, 300);
+      setTimeout(resetForm, 300); // Waits for the close animation before wiping data
     }
   };
 
   const handleSaveAccount = () => {
-    if (!name || !initialBalance) return; // Prevent saving if required fields are empty
+    if (!name || !initialBalance) return; 
 
     const parsedInitial = parseFloat(initialBalance.replace(/,/g, ''));
-    // If current balance is empty, default to initial balance
     const parsedCurrent = currentBalance ? parseFloat(currentBalance.replace(/,/g, '')) : parsedInitial;
 
     if (isNaN(parsedInitial)) return;
@@ -63,10 +67,12 @@ export function AddAccountModal({ children }: { children: React.ReactNode }) {
       currentBalance: parsedCurrent,
       accountType,
       breakeven: breakeven === 'Custom' ? customBreakeven : breakeven,
-      isStarred: false // Will be auto-starred if it's the first account by context logic
+      isStarred: false,
+      isArchived: false
     });
 
     setIsOpen(false);
+    setTimeout(resetForm, 300); // Wipes data after successful save
   };
 
   return (
