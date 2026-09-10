@@ -22,18 +22,28 @@ export default function Dashboard() {
   const [timeframe, setTimeframe] = useState('Week');
   const [displayView, setDisplayView] = useState('Money View');
   
-  const { trades } = useTrades();
+  const { trades, accounts, activeAccountId } = useTrades();
   
-  const startingBalance = 50000;
-  const totalRealPnl = trades.reduce((sum, trade) => sum + trade.pnl, 0);
-  const realBalance = startingBalance + totalRealPnl;
+  // Find the globally active account
+  const activeAccount = accounts.find(a => a.id === activeAccountId);
+  
+  // Dynamic Starting Balance based on the specific account selected
+  const startingBalance = activeAccount ? activeAccount.initialBalance : 0;
+  
+  // Filter trades to ONLY calculate PnL for the active account
+  const accountTrades = trades.filter(t => t.accountId === activeAccountId);
+  const totalRealPnl = accountTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+  
+  // Current real live balance
+  const realBalance = activeAccount ? activeAccount.currentBalance : 0;
 
   const buildEquityCurve = () => {
     const baseDate = new Date();
     const data = [];
     
+    // Calculates timeline data strictly using filtered trades and dynamic initial balance
     const getBalanceAtDate = (dateLimit: Date) => {
-      const pnl = trades
+      const pnl = accountTrades
         .filter(t => new Date(t.date).getTime() <= dateLimit.getTime())
         .reduce((sum, t) => sum + t.pnl, 0);
       return startingBalance + pnl;
@@ -66,6 +76,7 @@ export default function Dashboard() {
       }
     }
     
+    // Ensure the final data point perfectly matches current live balance
     data[data.length - 1].value = realBalance;
     
     return data;
