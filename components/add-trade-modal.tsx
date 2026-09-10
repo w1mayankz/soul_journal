@@ -184,15 +184,15 @@ export function AddTradeModal() {
 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <Dialog.Content className="fixed left-[50%] top-[50%] z-[70] flex max-h-[90vh] w-[95vw] max-w-lg translate-x-[-50%] translate-y-[-50%] flex-col rounded-2xl border border-neutral-800 bg-[#0A0A0A] p-5 shadow-2xl outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]">
+        <Dialog.Content className="fixed left-[50%] top-[50%] z-[70] flex max-h-[90vh] w-[95vw] max-w-lg translate-x-[-50%] translate-y-[-50%] flex-col rounded-2xl border border-neutral-800 bg-[#909090] p-3 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]">
           
           <div className="flex items-start justify-between mb-6">
             <div>
               <Dialog.Title className="text-[18px] font-medium text-white">Add Trade</Dialog.Title>
-              <Dialog.Description className="mt-1 text-[14px] text-neutral-500">Enter the details of your trade.</Dialog.Description>
+              <Dialog.Description className="mt-0.5 text-[15px] text-neutral-400 font-semibold">Enter the details of your trade.</Dialog.Description>
             </div>
-            <Dialog.Close className="text-neutral-500 hover:text-white transition-colors outline-none">
-              <Cancel01Icon size={20} />
+            <Dialog.Close className="text-white hover:text-white transition-colors outline-none">
+              <Cancel01Icon size={22} />
             </Dialog.Close>
           </div>
 
@@ -200,18 +200,18 @@ export function AddTradeModal() {
             
             {/* SYMBOL */}
             <div className="flex flex-col gap-2">
-              <label className="text-[14px] font-medium text-white">Symbol *</label>
+              <label className="text-[14px] font-semibold text-white">Symbol *</label>
               <Popover.Root open={symbolOpen} onOpenChange={setSymbolOpen}>
-                <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#141414] px-4 py-3.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
-                  {symbol || <span className="text-neutral-600">Select symbol...</span>}
-                  <ArrowDown01Icon size={18} className="text-neutral-500" />
+                <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-neutral-500 px-3 py-2.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
+                  {symbol || <span className="text-neutral-400">Select Symbol</span>}
+                  <ArrowDown01Icon size={18} className="text-neutral-400" />
                 </Popover.Trigger>
                 <Popover.Content align="start" className="z-[80] w-[calc(95vw-40px)] max-w-[440px] rounded-xl border border-neutral-800 bg-[#0A0A0A] p-0 shadow-2xl animate-in fade-in-80 zoom-in-95">
                   <div className="flex items-center border-b border-neutral-800 px-3 py-2">
                     <Search01Icon size={16} className="text-neutral-500 mr-2" />
                     <input 
                       type="text" 
-                      placeholder="Search symbols..." 
+                      placeholder="Search Symbols" 
                       className="flex-1 bg-transparent py-1.5 text-[14px] text-white outline-none placeholder:text-neutral-600"
                       value={symbolSearch}
                       onChange={(e) => setSymbolSearch(e.target.value)}
@@ -230,12 +230,12 @@ export function AddTradeModal() {
                   </div>
                 </Popover.Content>
               </Popover.Root>
-              <span className="text-[12px] font-medium text-neutral-500 px-1">Can't find a symbol? <span className="text-white underline underline-offset-2 cursor-pointer">Create it</span></span>
+              <span className="text-[14px] font-semibold text-neutral-600 px-1">Can't find a symbol? <span className="text-white underline underline-offset-2 cursor-pointer">Create it</span></span>
             </div>
 
             {/* DATE */}
             <div className="flex flex-col gap-2">
-              <label className="text-[14px] font-medium text-white">Entry date *</label>
+              <label className="text-[14px] font-semibold text-white">Entry date *</label>
               <Popover.Root open={dateOpen} onOpenChange={setDateOpen}>
                 <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#141414] px-4 py-3.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
                   {date ? `${format(date, 'yyyy/MM/dd')} ${time}` : <span className="text-neutral-600">Pick a date</span>}
@@ -284,7 +284,7 @@ export function AddTradeModal() {
             <div className="flex flex-col gap-2">
               <label className="text-[14px] font-medium text-white">Side *</label>
               <Tabs.Root value={side} onValueChange={setSide}>
-                <Tabs.List className="flex w-[160px] gap-1 rounded-xl bg-[#141414] p-1">
+                <Tabs.List className="flex w-[160px] gap-1 rounded-xl p-1">
                   <Tabs.Trigger value="buy" className="flex-1 rounded-lg py-2 text-[13px] font-semibold text-neutral-500 transition-all data-[state=active]:bg-[#262626] data-[state=active]:text-white outline-none">
                     Buy ↑
                   </Tabs.Trigger>
