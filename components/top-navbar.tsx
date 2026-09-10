@@ -13,6 +13,7 @@ export function TopNavbar({ children }: { children?: React.ReactNode }) {
   else if (pathname === '/calendar') pageTitle = 'Calendar';
   else if (pathname === '/analytics') pageTitle = 'Analytics';
   else if (pathname === '/strategies') pageTitle = 'Strategies';
+  else if (pathname === '/accounts') pageTitle = 'Accounts';
 
   return (
     <header className="flex h-14 items-center justify-between px-4 pt-2">
