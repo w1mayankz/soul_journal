@@ -4,7 +4,8 @@ import { useState } from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { TopNavbar } from '../../components/top-navbar';
 import { AddAccountModal } from '../../components/add-account-modal';
-import { useTrades } from '../../context/trades-context';
+import { EditAccountModal } from '../../components/edit-account-modal';
+import { useTrades, Account } from '../../context/trades-context';
 import { 
   DollarSquareIcon, 
   PercentIcon,
@@ -19,6 +20,7 @@ import {
 
 export default function AccountsPage() {
   const [displayView, setDisplayView] = useState('Money View');
+  const [editingAccount, setEditingAccount] = useState<Account | null>(null);
   
   const { accounts, trades, toggleStarAccount, activeAccountId, setActiveAccount } = useTrades();
   
@@ -106,7 +108,8 @@ export default function AccountsPage() {
                 <div 
                   key={acc.id} 
                   onClick={() => setActiveAccount(acc.id)}
-                  className={`flex justify-between rounded-2xl border ${isActive ? 'border-[#009C00] shadow-[0_0_15px_rgba(0,156,0,0.05)]' : 'border-neutral-800/60'} bg-[#090909] p-4 shadow-sm cursor-pointer transition-all hover:bg-[#111]`}
+                  // Hover highlight removed, green border strictly tracks Active status
+                  className={`flex justify-between rounded-2xl border ${isActive ? 'border-[#009C00] shadow-[0_0_15px_rgba(0,156,0,0.05)]' : 'border-neutral-800/60'} bg-[#090909] p-4 pr-3 shadow-sm cursor-pointer transition-all`}
                 >
                   <div className="flex flex-col flex-1">
                     <div className="flex items-center gap-2.5">
@@ -141,16 +144,58 @@ export default function AccountsPage() {
                     </div>
                   </div>
                   
-                  <div className="flex flex-col items-center justify-between rounded-xl border border-neutral-800/60 bg-[#141414] overflow-hidden ml-3 z-10">
-                    <button onClick={(e) => { e.stopPropagation(); toggleStarAccount(acc.id); }} className="p-2.5 hover:bg-[#1A1A1A] transition-colors border-b border-neutral-800/60 outline-none">
+                  {/* REFINED GRAY STRIP WITH SQUARE BUTTONS */}
+                  <div className="flex flex-col items-center gap-2 rounded-xl bg-[#141414] p-1.5 ml-2 z-10 border border-neutral-800/60 shadow-sm">
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); toggleStarAccount(acc.id); }} 
+                      className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#1A1A1A] hover:bg-[#262626] transition-colors outline-none"
+                    >
                       <StarIcon size={18} className={acc.isStarred ? "text-orange-500 fill-orange-500" : "text-neutral-400"} />
                     </button>
-                    <button onClick={(e) => e.stopPropagation()} className="p-2.5 hover:bg-[#1A1A1A] transition-colors border-b border-neutral-800/60 outline-none">
+                    
+                    <button 
+                      onClick={(e) => e.stopPropagation()} 
+                      className="flex h-9 w-9 items-center justify-center rounded-lg hover:bg-[#1A1A1A] transition-colors outline-none"
+                    >
                       <Download01Icon size={18} className="text-neutral-400" />
                     </button>
-                    <button onClick={(e) => e.stopPropagation()} className="p-2.5 hover:bg-[#1A1A1A] transition-colors outline-none">
-                      <Menu01Icon size={18} className="text-neutral-400" />
-                    </button>
+                    
+                    {/* DROPDOWN MENU IMPLEMENTATION */}
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <DropdownMenu.Root>
+                        <DropdownMenu.Trigger asChild>
+                          <button className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#1A1A1A] hover:bg-[#262626] transition-colors outline-none">
+                            <Menu01Icon size={18} className="text-neutral-400" />
+                          </button>
+                        </DropdownMenu.Trigger>
+                        <DropdownMenu.Portal>
+                          <DropdownMenu.Content align="end" className="z-50 min-w-[200px] overflow-hidden rounded-xl border border-neutral-800 bg-[#0A0A0A]/90 backdrop-blur-xl p-1 shadow-2xl text-white text-[14px] animate-in fade-in-80 zoom-in-95">
+                            <DropdownMenu.Item className="flex items-center rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
+                              Import trades
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item onClick={() => setEditingAccount(acc)} className="flex items-center rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
+                              Edit account
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item className="flex items-center rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
+                              Balance adjustments
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item className="flex items-center rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
+                              Fee settings
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item className="flex items-center rounded-lg px-3 py-2.5 outline-none hover:bg-[#1A1A1A] cursor-pointer">
+                              Archive account
+                            </DropdownMenu.Item>
+                            
+                            <DropdownMenu.Separator className="my-1 h-px bg-neutral-800/60 mx-2" />
+                            
+                            <DropdownMenu.Item className="flex items-center rounded-lg px-3 py-2.5 outline-none hover:bg-[#F44336]/15 text-[#F44336] cursor-pointer font-medium">
+                              Delete account
+                            </DropdownMenu.Item>
+                          </DropdownMenu.Content>
+                        </DropdownMenu.Portal>
+                      </DropdownMenu.Root>
+                    </div>
+
                   </div>
                 </div>
               );
@@ -165,6 +210,10 @@ export default function AccountsPage() {
           </>
         )}
       </section>
+
+      {/* Renders safely outside the mapping loop */}
+      <EditAccountModal account={editingAccount} onClose={() => setEditingAccount(null)} />
+
     </div>
   );
 }
