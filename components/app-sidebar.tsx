@@ -20,8 +20,8 @@ export function AppSidebar() {
 
   return (
     <div className="flex h-full w-full flex-col bg-[#000000] text-neutral-300">
-      
-      {/* STICKY HEADER */}
+
+     {/* STICKY HEADER */}
       <div className="flex flex-col gap-4 bg-[#000000] p-4 pb-2">
         <div className="flex items-center gap-3 px-1">
           <img src="/assets/logo.png" alt="Logo" className="h-7 w-7 rounded-md object-cover bg-neutral-800" />
@@ -29,7 +29,11 @@ export function AppSidebar() {
           <span className="ml-auto text-[12px] font-semibold text-neutral-500">Free</span>
         </div>
 
-        <button className="flex w-full items-center justify-between rounded-xl border border-neutral-800/50 bg-[#0A0A0A] p-2.5 outline-none transition-colors hover:bg-[#141414] active:scale-[0.98]">
+        {/* Changed from <button> to <Link href="/accounts"> */}
+        <Link 
+          href="/accounts" 
+          className="flex w-full items-center justify-between rounded-xl border border-neutral-800/50 bg-[#0A0A0A] p-2.5 outline-none transition-colors hover:bg-[#141414] active:scale-[0.98]"
+        >
           <div className="flex items-center gap-3">
             <div className="relative flex h-2 w-2 ml-1">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75"></span>
@@ -44,7 +48,7 @@ export function AppSidebar() {
             <PencilEdit01Icon size={16} />
             <ArrowDown01Icon size={18} />
           </div>
-        </button>
+        </Link>
       </div>
 
       {/* SCROLLABLE BODY */}
