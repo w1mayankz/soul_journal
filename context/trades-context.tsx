@@ -19,6 +19,7 @@ export type Account = {
   accountType: string;
   breakeven: string;
   isStarred: boolean;
+  isArchived?: boolean; // New flag for archiving
 };
 
 const TradesContext = createContext<{
@@ -27,6 +28,8 @@ const TradesContext = createContext<{
   accounts: Account[];
   addAccount: (account: Account) => void;
   updateAccount: (account: Account) => void;
+  deleteAccount: (id: number) => void;
+  toggleArchiveAccount: (id: number) => void;
   toggleStarAccount: (id: number) => void;
   activeAccountId: number | null;
   setActiveAccount: (id: number) => void;
@@ -52,12 +55,24 @@ export function TradesProvider({ children }: { children: ReactNode }) {
   const addAccount = (account: Account) => {
     setAccounts(prev => {
       if (prev.length === 0) setActiveAccountId(account.id);
-      return [...prev, account];
+      return [...prev, { ...account, isArchived: false }];
     });
   };
 
   const updateAccount = (updatedAccount: Account) => {
     setAccounts(prev => prev.map(acc => acc.id === updatedAccount.id ? updatedAccount : acc));
+  };
+
+  const deleteAccount = (id: number) => {
+    setAccounts(prev => prev.filter(acc => acc.id !== id));
+    if (activeAccountId === id) setActiveAccountId(null);
+  };
+
+  const toggleArchiveAccount = (id: number) => {
+    setAccounts(prev => prev.map(acc => 
+      acc.id === id ? { ...acc, isArchived: !acc.isArchived } : acc
+    ));
+    if (activeAccountId === id) setActiveAccountId(null);
   };
 
   const toggleStarAccount = (id: number) => {
@@ -73,6 +88,8 @@ export function TradesProvider({ children }: { children: ReactNode }) {
       accounts, 
       addAccount, 
       updateAccount,
+      deleteAccount,
+      toggleArchiveAccount,
       toggleStarAccount, 
       activeAccountId, 
       setActiveAccount: setActiveAccountId 
