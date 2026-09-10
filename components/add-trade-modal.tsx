@@ -202,9 +202,9 @@ export function AddTradeModal() {
             <div className="flex flex-col gap-2">
               <label className="text-[14px] font-semibold text-white">Symbol *</label>
               <Popover.Root open={symbolOpen} onOpenChange={setSymbolOpen}>
-                <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-neutral-500 px-3 py-2.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
+                <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#141414] px-3 py-2.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
                   {symbol || <span className="text-neutral-400">Select Symbol</span>}
-                  <ArrowDown01Icon size={18} className="text-neutral-400" />
+                  <ArrowDown01Icon size={20} className="text-neutral-400" />
                 </Popover.Trigger>
                 <Popover.Content align="start" className="z-[80] w-[calc(95vw-40px)] max-w-[440px] rounded-xl border border-neutral-800 bg-neutral-500 p-0 shadow-2xl animate-in fade-in-80 zoom-in-95">
                   <div className="flex items-center border-b border-neutral-800 px-3 py-2">
@@ -222,7 +222,7 @@ export function AddTradeModal() {
                       <button 
                         key={s} 
                         onClick={() => { setSymbol(s); setSymbolOpen(false); }}
-                        className="w-full rounded-lg px-3 py-2.5 text-left text-[14px] font-medium text-neutral-300 hover:bg-[#1A1A1A] hover:text-white outline-none"
+                        className="w-full rounded-lg px-3 py-2.5 text-left text-[14px] font-semibold text-white hover:bg-[#1A1A1A] hover:text-white outline-none"
                       >
                         {s}
                       </button>
@@ -237,11 +237,11 @@ export function AddTradeModal() {
             <div className="flex flex-col gap-2">
               <label className="text-[14px] font-semibold text-white">Entry date *</label>
               <Popover.Root open={dateOpen} onOpenChange={setDateOpen}>
-                <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#141414] px-4 py-3.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
+                <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#141414] px-3 py-2.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
                   {date ? `${format(date, 'yyyy/MM/dd')} ${time}` : <span className="text-neutral-600">Pick a date</span>}
-                  <Calendar01Icon size={18} className="text-neutral-500" />
+                  <Calendar01Icon size={20} className="text-white" />
                 </Popover.Trigger>
-                <Popover.Content align="start" className="z-[80] rounded-xl border border-neutral-800 bg-[#0A0A0A] p-3 shadow-2xl animate-in fade-in-80 zoom-in-95">
+                <Popover.Content align="start" className="z-[80] rounded-xl border border-neutral-800 bg-[#0A0A0A] p-3 animate-in fade-in-80 zoom-in-95">
                   <DayPicker
                     mode="single"
                     selected={date}
@@ -282,13 +282,13 @@ export function AddTradeModal() {
 
             {/* SIDE */}
             <div className="flex flex-col gap-2">
-              <label className="text-[14px] font-medium text-white">Side *</label>
+              <label className="text-[14px] font-semibold text-white">Side *</label>
               <Tabs.Root value={side} onValueChange={setSide}>
                 <Tabs.List className="flex w-[160px] gap-1 rounded-xl p-1">
-                  <Tabs.Trigger value="buy" className="flex-1 rounded-lg py-2 text-[13px] font-semibold text-neutral-500 transition-all data-[state=active]:bg-[#262626] data-[state=active]:text-white outline-none">
+                  <Tabs.Trigger value="buy" className="flex-1 rounded-lg py-2 text-[14px] font-semibold text-neutral-500 transition-all data-[state=active]:bg-[#262626] data-[state=active]:text-white outline-none">
                     Buy ↑
                   </Tabs.Trigger>
-                  <Tabs.Trigger value="sell" className="flex-1 rounded-lg py-2 text-[13px] font-semibold text-neutral-500 transition-all data-[state=active]:bg-[#262626] data-[state=active]:text-white outline-none">
+                  <Tabs.Trigger value="sell" className="flex-1 rounded-lg py-2 text-[14px] font-semibold text-neutral-500 transition-all data-[state=active]:bg-[#262626] data-[state=active]:text-white outline-none">
                     Sell ↓
                   </Tabs.Trigger>
                 </Tabs.List>
@@ -297,7 +297,7 @@ export function AddTradeModal() {
 
             {/* P&L */}
             <div className="flex flex-col gap-2">
-              <label className="text-[14px] font-medium text-white">P&L *</label>
+              <label className="text-[14px] font-semibold text-white">P&L *</label>
               <div className={`flex items-center rounded-xl bg-[#141414] px-4 border transition-colors ${pnlError ? 'border-[#F44336]' : 'border-transparent focus-within:border-neutral-700'}`}>
                 <span className="text-neutral-500 mr-2 font-medium">$</span>
                 <input 
@@ -312,7 +312,7 @@ export function AddTradeModal() {
 
             {/* RISK/REWARD SLIDER BLOCK */}
             <div className="flex flex-col gap-2 pt-1">
-              <label className="text-[14px] font-medium text-white">Risk/Reward ratio</label>
+              <label className="text-[14px] font-semibold text-white">Risk/Reward ratio</label>
               <div className="flex items-center gap-3">
                 <input
                   type="text"
@@ -351,7 +351,7 @@ export function AddTradeModal() {
 
             {/* RATING SLIDER BLOCK */}
             <div className="flex flex-col gap-2 pt-1">
-              <label className="text-[14px] font-medium text-white">Rating</label>
+              <label className="text-[14px] font-semibold text-white">Rating</label>
               <div className="flex items-center gap-3">
                 <span className="w-6 text-[13px] font-medium text-neutral-400">
                   {rating !== null ? rating.toFixed(1) : '-'}
@@ -389,9 +389,9 @@ export function AddTradeModal() {
             {/* ADVANCED OPTIONS TOGGLE */}
             <button 
               onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
-              className="flex items-center gap-2 text-[14px] font-medium text-white outline-none transition-colors mt-2"
+              className="flex items-center gap-2 text-[14px] font-semibold text-white outline-none transition-colors mt-2"
             >
-              <ArrowRight01Icon size={16} className={`transition-transform duration-200 ${isAdvancedOpen ? 'rotate-90 text-neutral-300' : 'text-neutral-400'}`} /> 
+              <ArrowRight01Icon size={18} className={`transition-transform duration-200 ${isAdvancedOpen ? 'rotate-90 text-white' : 'text-neutral-400'}`} /> 
               Advanced options
             </button>
 
@@ -401,7 +401,7 @@ export function AddTradeModal() {
                 
                 {/* Exit Date */}
                 <div className="flex flex-col gap-2">
-                  <label className="text-[14px] font-medium text-white">Exit date</label>
+                  <label className="text-[14px] font-semibold text-white">Exit date</label>
                   <Popover.Root open={exitDateOpen} onOpenChange={setExitDateOpen}>
                     <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#141414] px-4 py-3.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
                       {exitDate ? `${format(exitDate, 'yyyy/MM/dd')} ${exitTime}` : <span className="text-neutral-600">Enter trade exit date</span>}
@@ -484,7 +484,7 @@ export function AddTradeModal() {
 
             {/* STRATEGY DROPDOWN */}
             <div className="flex flex-col gap-2 mt-2">
-              <label className="text-[14px] font-medium text-white">Strategy</label>
+              <label className="text-[14px] font-semibold text-white">Strategy</label>
               <Popover.Root open={strategyOpen} onOpenChange={setStrategyOpen}>
                 <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#141414] px-4 py-3.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
                   {strategy}
