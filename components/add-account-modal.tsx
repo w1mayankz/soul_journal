@@ -12,13 +12,17 @@ import {
   InformationCircleIcon
 } from 'hugeicons-react';
 
+const BREAKEVEN_OPTIONS = ['None', '0.01%', '0.02%', '0.03%', '0.04%', '0.05%', '0.1%', '0.5%', 'Custom'];
+const ACCOUNT_TYPES = ['Personal Funds', 'Live Funded', 'Challenge Phase 1', 'Challenge Phase 2', 'Demo'];
+
 export function AddAccountModal({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
 
-  // Form State (UI only for now)
+  // Form State
   const [breakeven, setBreakeven] = useState('0.1%');
+  const [customBreakeven, setCustomBreakeven] = useState('');
   const [breakevenOpen, setBreakevenOpen] = useState(false);
   
   const [accountType, setAccountType] = useState('');
@@ -148,6 +152,7 @@ export function AddAccountModal({ children }: { children: React.ReactNode }) {
                   {isAdvancedOpen && (
                     <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-top-2 duration-200 pt-2">
                       
+                      {/* BREAKEVEN DROPDOWN */}
                       <div className="flex flex-col gap-2">
                         <label className="flex items-center gap-1.5 text-[14px] font-medium text-white">
                           Breakeven Level <InformationCircleIcon size={14} className="text-neutral-500" />
@@ -158,15 +163,30 @@ export function AddAccountModal({ children }: { children: React.ReactNode }) {
                             <ArrowDown01Icon size={16} className="text-neutral-500" />
                           </Popover.Trigger>
                           <Popover.Content align="start" className="z-[80] w-[calc(95vw-40px)] max-w-[440px] rounded-xl border border-neutral-800 bg-[#0A0A0A] p-1 shadow-2xl animate-in fade-in-80 zoom-in-95">
-                            {['0.0%', '0.1%', '0.2%', '0.5%'].map(val => (
+                            {BREAKEVEN_OPTIONS.map(val => (
                               <button key={val} onClick={() => { setBreakeven(val); setBreakevenOpen(false); }} className="w-full rounded-lg px-3 py-2.5 text-left text-[14px] font-medium text-neutral-300 hover:bg-[#1A1A1A] hover:text-white outline-none">
                                 {val}
                               </button>
                             ))}
                           </Popover.Content>
                         </Popover.Root>
+                        
+                        {/* CUSTOM BREAKEVEN INPUT */}
+                        {breakeven === 'Custom' && (
+                          <div className="flex items-center rounded-xl bg-[#141414] px-4 border border-transparent focus-within:border-neutral-700 transition-colors animate-in fade-in slide-in-from-top-2">
+                            <input 
+                              type="text" 
+                              value={customBreakeven}
+                              onChange={(e) => setCustomBreakeven(e.target.value)}
+                              placeholder="0.1" 
+                              className="flex-1 bg-transparent py-3.5 text-[14px] font-medium text-white outline-none placeholder:text-neutral-600"
+                            />
+                            <span className="text-[15px] font-medium text-neutral-400 ml-2">%</span>
+                          </div>
+                        )}
                       </div>
 
+                      {/* ACCOUNT TYPE DROPDOWN */}
                       <div className="flex flex-col gap-2">
                         <label className="text-[14px] font-medium text-white">Account Type</label>
                         <Popover.Root open={accountTypeOpen} onOpenChange={setAccountTypeOpen}>
@@ -175,7 +195,7 @@ export function AddAccountModal({ children }: { children: React.ReactNode }) {
                             <ArrowDown01Icon size={16} className="text-neutral-500" />
                           </Popover.Trigger>
                           <Popover.Content align="start" className="z-[80] w-[calc(95vw-40px)] max-w-[440px] rounded-xl border border-neutral-800 bg-[#0A0A0A] p-1 shadow-2xl animate-in fade-in-80 zoom-in-95">
-                            {['Prop Firm', 'Personal Broker', 'Crypto Exchange'].map(val => (
+                            {ACCOUNT_TYPES.map(val => (
                               <button key={val} onClick={() => { setAccountType(val); setAccountTypeOpen(false); }} className="w-full rounded-lg px-3 py-2.5 text-left text-[14px] font-medium text-neutral-300 hover:bg-[#1A1A1A] hover:text-white outline-none">
                                 {val}
                               </button>
