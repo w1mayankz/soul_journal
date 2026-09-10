@@ -14,9 +14,18 @@ import {
   MoreHorizontalIcon,
   PencilEdit01Icon
 } from 'hugeicons-react';
+import { useTrades } from '../context/trades-context';
 
 export function AppSidebar() {
   const pathname = usePathname();
+  
+  // Pull real account data from context
+  const { accounts } = useTrades();
+  const activeAccount = accounts.find(a => a.isStarred) || accounts[0];
+  
+  // Dynamic display values
+  const displayName = activeAccount ? activeAccount.name : 'All Accounts';
+  const displayBalance = activeAccount ? `$${activeAccount.currentBalance.toLocaleString()}` : '$0';
 
   return (
     <div className="flex h-full w-full flex-col bg-[#000000] text-neutral-300">
@@ -29,19 +38,21 @@ export function AppSidebar() {
           <span className="ml-auto text-[12px] font-semibold text-neutral-500">Free</span>
         </div>
 
-        {/* Changed from <button> to <Link href="/accounts"> */}
         <Link 
           href="/accounts" 
           className="flex w-full items-center justify-between rounded-xl border border-neutral-800/50 bg-[#0A0A0A] p-2.5 outline-none transition-colors hover:bg-[#141414] active:scale-[0.98]"
         >
           <div className="flex items-center gap-3">
-            <div className="relative flex h-2 w-2 ml-1">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
-            </div>
-            <div className="flex flex-col items-start">
-              <span className="text-[15px] font-medium leading-none text-white">SK9 Model</span>
-              <span className="mt-1.5 text-[12px] font-semibold leading-none text-neutral-500">$50,640</span>
+            {/* Only show the pulsing dot if an account actually exists */}
+            {activeAccount && (
+              <div className="relative flex h-2 w-2 ml-1">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+              </div>
+            )}
+            <div className={`flex flex-col items-start ${!activeAccount ? 'ml-1' : ''}`}>
+              <span className="text-[15px] font-medium leading-none text-white">{displayName}</span>
+              <span className="mt-1.5 text-[12px] font-semibold leading-none text-neutral-500">{displayBalance}</span>
             </div>
           </div>
           <div className="flex items-center gap-2 text-neutral-500">
