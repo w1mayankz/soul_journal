@@ -26,6 +26,7 @@ const TradesContext = createContext<{
   addTrade: (trade: Trade) => void;
   accounts: Account[];
   addAccount: (account: Account) => void;
+  updateAccount: (account: Account) => void;
   toggleStarAccount: (id: number) => void;
   activeAccountId: number | null;
   setActiveAccount: (id: number) => void;
@@ -37,12 +38,10 @@ export function TradesProvider({ children }: { children: ReactNode }) {
   const [activeAccountId, setActiveAccountId] = useState<number | null>(null);
 
   const addTrade = (trade: Trade) => {
-    if (!activeAccountId) return; // Must have an active account to log a trade
-    
+    if (!activeAccountId) return; 
     const tradeWithAccount = { ...trade, accountId: activeAccountId };
     setTrades(prev => [tradeWithAccount, ...prev]);
 
-    // Instantly update the current balance of the active account
     setAccounts(prev => prev.map(acc => 
       acc.id === activeAccountId 
         ? { ...acc, currentBalance: acc.currentBalance + trade.pnl } 
@@ -52,16 +51,16 @@ export function TradesProvider({ children }: { children: ReactNode }) {
 
   const addAccount = (account: Account) => {
     setAccounts(prev => {
-      // If this is the very first account, automatically make it the active one
-      if (prev.length === 0) {
-        setActiveAccountId(account.id);
-      }
+      if (prev.length === 0) setActiveAccountId(account.id);
       return [...prev, account];
     });
   };
 
+  const updateAccount = (updatedAccount: Account) => {
+    setAccounts(prev => prev.map(acc => acc.id === updatedAccount.id ? updatedAccount : acc));
+  };
+
   const toggleStarAccount = (id: number) => {
-    // Allows multiple accounts to be starred/unstarred for cosmetics
     setAccounts(prev => prev.map(acc => 
       acc.id === id ? { ...acc, isStarred: !acc.isStarred } : acc
     ));
@@ -73,6 +72,7 @@ export function TradesProvider({ children }: { children: ReactNode }) {
       addTrade, 
       accounts, 
       addAccount, 
+      updateAccount,
       toggleStarAccount, 
       activeAccountId, 
       setActiveAccount: setActiveAccountId 
