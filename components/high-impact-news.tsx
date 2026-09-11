@@ -49,8 +49,10 @@ export function HighImpactNews() {
   useEffect(() => {
     async function fetchNews() {
       try {
-        // Free proxy endpoint for Forex Factory JSON data
-        const res = await fetch('https://nfs.faireconomy.media/ff_calendar_thisweek.json');
+        // ADDED { cache: 'no-store' } to bypass aggressive Next.js caching!
+        const res = await fetch('https://nfs.faireconomy.media/ff_calendar_thisweek.json', {
+          cache: 'no-store'
+        });
         const data: FFEvent[] = await res.json();
 
         const parsed = data
@@ -67,7 +69,7 @@ export function HighImpactNews() {
               importance
             };
           })
-          // Filter for today's upcoming events only
+          // STRICT FILTER: Only show events that are today AND happen in the future
           .filter(item => isToday(item.dateObj) && item.dateObj.getTime() > new Date().getTime())
           .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
 
@@ -126,7 +128,7 @@ export function HighImpactNews() {
             <div className="h-[52px] w-full animate-pulse rounded-xl border border-neutral-800/40 bg-[#0A0A0A]"></div>
             <div className="h-[52px] w-full animate-pulse rounded-xl border border-neutral-800/40 bg-[#0A0A0A]"></div>
           </>
-                ) : filteredEvents.length === 0 ? (
+        ) : filteredEvents.length === 0 ? (
           <div className="flex min-h-[120px] items-center justify-center px-4 text-center">
             <span className="text-[16px] font-medium text-neutral-600">
               There is no high impact news today, enjoy your trading.
