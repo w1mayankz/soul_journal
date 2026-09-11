@@ -456,14 +456,14 @@ export function AddTradeModal() {
                 ].map((field, idx) => (
                   <div key={idx} className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-white">{field.label}</label>
-                    <div className="flex items-center rounded-xl bg-[#1F1F1F] px-4 py-2.5 border border-transparent focus-within:border-neutral-700 transition-colors">
+                    <div className="flex items-center rounded-xl bg-[#1F1F1F] px-3 py-2.5 border border-transparent focus-within:border-neutral-700 transition-colors">
                       {field.currency && <span className="text-neutral-500 mr-2 font-medium">$</span>}
                       <input 
                         type="text" 
                         value={field.val}
                         onChange={(e) => field.setter(e.target.value)}
                         placeholder={field.ph} 
-                        className="flex-1 bg-transparent py-2.5 text-[14px] font-medium text-white outline-none placeholder:text-neutral-600"
+                        className="flex-1 bg-transparent py-2.5 text-[14px] font-medium text-white outline-none placeholder:text-neutral-500"
                       />
                     </div>
                   </div>
