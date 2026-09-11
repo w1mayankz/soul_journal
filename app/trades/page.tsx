@@ -7,8 +7,6 @@ import {
   DollarSquareIcon, 
   FilterIcon,
   Menu05Icon, 
-  ArrowUp02Icon,
-  ArrowDown01Icon,
   ArrowLeft01Icon,
   ArrowRight01Icon,
   PercentIcon,
@@ -78,7 +76,15 @@ export default function TradesPage() {
           {/* DYNAMIC REAL TRADES MAPPED HERE */}
           {trades.map((trade) => {
             const isWin = trade.pnl > 0;
-            const pnlColorClass = isWin ? 'text-[#009C00] bg-[#009C00]/15' : 'text-[#F44336] bg-[#F44336]/15';
+            const isLoss = trade.pnl < 0;
+            
+            const pnlColorClass = isWin 
+              ? 'text-[#009C00] bg-[#009C00]/15' 
+              : isLoss 
+                ? 'text-[#F44336] bg-[#F44336]/15' 
+                : 'text-neutral-400 bg-[#1A1A1A]'; // Breakeven styling
+                
+            const pnlSymbol = isWin ? '▴ ' : isLoss ? '▾ ' : '';
             
             return (
               <button key={trade.id} className="flex w-full grid grid-cols-[1.5fr_1fr_1fr] items-center px-4 py-3 hover:bg-[#141414] transition-colors rounded-xl outline-none group text-left mb-1">
@@ -90,12 +96,9 @@ export default function TradesPage() {
                 </span>
                 <div className="flex justify-end">
                   <div className={`flex items-center gap-1 rounded-md px-2 py-1 text-[15px] font-medium ${pnlColorClass}`}>
-                    {displayView !== 'Hide P&L' && (
-                      isWin ? <ArrowUp02Icon size={12} /> : <ArrowDown01Icon size={12} />
-                    )}
                     {displayView === 'Hide P&L' ? '***' : 
-                     displayView === 'Percentage View' ? `${((trade.pnl / 50000) * 100).toFixed(1)}%` : 
-                     `${isWin ? '' : '-'}$${Math.abs(trade.pnl).toLocaleString()}`}
+                     displayView === 'Percentage View' ? `${pnlSymbol}${((Math.abs(trade.pnl) / 50000) * 100).toFixed(1)}%` : 
+                     `${pnlSymbol}$${Math.abs(trade.pnl).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2})}`}
                   </div>
                 </div>
               </button>
