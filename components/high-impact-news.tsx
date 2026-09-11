@@ -46,17 +46,24 @@ export function HighImpactNews() {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
+    useEffect(() => {
     async function fetchNews() {
       try {
-        // ADDED { cache: 'no-store' } to bypass aggressive Next.js caching!
-        const res = await fetch('https://nfs.faireconomy.media/ff_calendar_thisweek.json', {
-          cache: 'no-store'
-        });
+        // 1. Bypass browser caching with a timestamp
+        const timestamp = new Date().getTime();
+        const targetUrl = `https://nfs.faireconomy.media/ff_calendar_thisweek.json?_t=${timestamp}`;
+        
+        // 2. Bypass CORS restrictions using a free raw proxy
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+        
+        const res = await fetch(proxyUrl, { cache: 'no-store' });
+        
+        if (!res.ok) throw new Error('Network response was not ok');
+        
         const data: FFEvent[] = await res.json();
 
         const parsed = data
-          .filter(item => item.country === 'USD')
+          .filter(item => item.country.trim().toUpperCase() === 'USD')
           .map((item, index) => {
             let importance = 1; // Low
             if (item.impact === 'High' || item.impact === 'Holiday') importance = 3;
@@ -75,7 +82,8 @@ export function HighImpactNews() {
 
         setEvents(parsed);
       } catch (error) {
-        console.error("Failed to fetch news", error);
+        // If it fails, check your browser console (F12) to see the exact error
+        console.error("Failed to fetch news:", error);
       } finally {
         setIsLoading(false);
       }
