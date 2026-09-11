@@ -39,5 +39,6 @@ export function TopNavbar({ children }: { children?: React.ReactNode }) {
         {children}
       </div>
     </header>
+  <div className="h-14 w-full"></div>
   );
 }
