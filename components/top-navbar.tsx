@@ -17,7 +17,7 @@ export function TopNavbar({ children }: { children?: React.ReactNode }) {
 
   return (
     <>
-    <header className="fixed left-0 right-0 top-0 z-50 flex h-14 items-center justify-between bg-black px-4 pt-2"
+    <header className="fixed left-0 right-0 top-0 z-50 flex h-14 items-center justify-between bg-black px-4 pt-2">
       <div className="flex items-center gap-1">
         <Dialog.Root>
           <Dialog.Trigger asChild>
