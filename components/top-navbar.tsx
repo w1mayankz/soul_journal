@@ -16,7 +16,7 @@ export function TopNavbar({ children }: { children?: React.ReactNode }) {
   else if (pathname === '/accounts') pageTitle = 'Accounts';
 
   return (
-    <header className="flex h-14 items-center justify-between px-4 pt-2">
+    <header className="sticky top-0 z-50 flex h-14 items-center justify-between px-4 pt-2">
       <div className="flex items-center gap-1">
         <Dialog.Root>
           <Dialog.Trigger asChild>
