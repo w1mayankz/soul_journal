@@ -412,7 +412,7 @@ export default function Dashboard() {
 
           {recentTrades.length === 0 ? (
             <div className="flex min-h-[120px] items-center justify-center">
-              <span className="text-[16px] font-medium text-neutral-600">
+              <span className="text-[16px] text-center font-medium text-neutral-600">
                 You don't have any trades yet. Register a trade to get started.
               </span>
             </div>
