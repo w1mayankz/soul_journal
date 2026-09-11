@@ -48,7 +48,7 @@ export function HighImpactNews() {
   useEffect(() => {
     async function fetchNews() {
       try {
-                // Call our own Next.js API Route safely!
+        // Call our own Next.js API Route safely!
         const res = await fetch('/api/news', { cache: 'no-store' });
 
         if (!res || !res.ok) throw new Error(`HTTP Error: ${res?.status || 'Network failure'}`);
@@ -157,14 +157,14 @@ export function HighImpactNews() {
               <div key={event.id} className="flex items-center justify-between rounded-xl border border-neutral-800/60 bg-[#090909] p-3 px-4">
                 <div className="flex items-center gap-3">
                   <div className="h-4 w-6 overflow-hidden rounded-[2px]">
-                    <img src="/usa.jpg" alt="USA" className="h-full w-full object-cover" />
+                    <img src="/assets/usa.jpg" alt="USA" className="h-full w-full object-cover" />
                   </div>
                   <span className="text-[14px] font-semibold text-white tracking-tight">{event.title}</span>
                 </div>
                 
                 <div className="flex items-center gap-4">
                   <span className="text-[13px] font-medium text-white whitespace-nowrap">{timeString}</span>
-                  <div className="flex items-center gap-2 rounded-full bg-[#141414] px-2.5 py-1">
+                  <div className="flex items-center gap-2">
                     <span className="text-[11px] font-semibold text-neutral-400 mr-1">{format(event.dateObj, 'HH:mm')}</span>
                     <div className="flex items-center gap-0.5">
                       <Star filled={event.importance >= 1} />
