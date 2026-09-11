@@ -398,20 +398,20 @@ export default function Dashboard() {
         <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] p-4 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <div className="flex flex-col">
-              <span className="text-[16px] font-semibold tracking-tight text-white">Recent Trades</span>
-              <span className="text-[13px] font-medium text-neutral-500">Last 4 registered trades</span>
+              <span className="text-[16px] font-medium tracking-tight text-white">Recent Trades</span>
+              <span className="text-[14px] font-semibold text-neutral-500">Last 4 registered trades</span>
             </div>
             <Link 
               href="/trades" 
               className="flex items-center gap-1.5 rounded-lg bg-[#141414] px-3 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-[#1A1A1A] active:scale-95 outline-none"
             >
-              See all →
+              See all
             </Link>
           </div>
 
           {recentTrades.length === 0 ? (
             <div className="flex min-h-[120px] items-center justify-center">
-              <span className="text-[13px] font-medium text-neutral-600">
+              <span className="text-[14px] font-medium text-neutral-600">
                 You don't have any trades yet. Register a trade to get started.
               </span>
             </div>
@@ -428,16 +428,16 @@ export default function Dashboard() {
                 return (
                   <div key={trade.id} className="flex flex-col rounded-xl border border-neutral-800/60 bg-[#0F0F0F] p-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-[14px] font-semibold text-white tracking-tight">{trade.symbol}</span>
-                      <span className={`text-[13px] font-semibold tracking-tight ${pnlColor}`}>
+                      <span className="text-[15px] font-medium text-white tracking-tight">{trade.symbol}</span>
+                      <span className={`text-[15px] font-medium tracking-tight ${pnlColor}`}>
                         {pnlSymbol} {isLoss ? '' : ''}${Math.abs(trade.pnl).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2})}
                       </span>
                     </div>
                     <div className="mt-3 flex items-center justify-between">
-                      <span className="text-[13px] font-medium text-white capitalize">
+                      <span className="text-[14px] font-medium text-white capitalize">
                         {trade.side} <span className={sideColor}>{sideSymbol}</span>
                       </span>
-                      <span className="text-[12px] font-medium text-neutral-500">
+                      <span className="text-[13px] font-semibold text-neutral-500">
                         {format(new Date(trade.date), 'EEE dd/MM')}
                       </span>
                     </div>
