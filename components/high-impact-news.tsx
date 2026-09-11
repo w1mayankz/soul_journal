@@ -88,11 +88,11 @@ export function HighImpactNews() {
   const isFilterActive = minImportance > 1;
 
   return (
-    <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] p-4 shadow-sm">
+    <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] p-3">
       <div className="mb-4 flex items-start justify-between">
         <div className="flex flex-col">
-          <span className="text-[16px] font-semibold tracking-tight text-white">High Impact News</span>
-          <span className="text-[13px] font-medium text-neutral-500">Upcoming USD events</span>
+          <span className="text-[16px] font-medium tracking-tight text-white">High Impact News</span>
+          <span className="text-[15px] font-semibold text-neutral-600">Upcoming news events of today</span>
         </div>
         
         <DropdownMenu.Root>
@@ -102,10 +102,10 @@ export function HighImpactNews() {
           <DropdownMenu.Portal>
             <DropdownMenu.Content 
               align="end"
-              className="z-50 min-w-[180px] rounded-xl border border-neutral-800 bg-[#0A0A0A]/95 backdrop-blur-xl p-3 shadow-2xl animate-in fade-in-80 zoom-in-95 data-[side=bottom]:slide-in-from-top-2"
+              className="z-50 min-w-[180px] rounded-xl border border-neutral-800 bg-[#0A0A0A]/95 backdrop-blur-xl p-2 shadow-2xl animate-in fade-in-80 zoom-in-95 data-[side=bottom]:slide-in-from-top-2"
             >
-              <span className="text-[13px] font-semibold text-neutral-400 mb-2 block">Minimum Importance</span>
-              <div className="flex items-center gap-2">
+              <span className="text-[14px] font-semibold text-white mb-1 block">Minimum Importance</span>
+              <div className="flex items-center gap-0.5">
                 {[1, 2, 3].map(rating => (
                   <button 
                     key={rating}
@@ -134,7 +134,7 @@ export function HighImpactNews() {
           </div>
         ) : filteredEvents.length === 0 ? (
           <div className="flex min-h-[120px] items-center justify-center px-4 text-center">
-            <span className="text-[13px] font-medium text-neutral-600">
+            <span className="text-[16px] font-medium text-neutral-600">
               There is no high impact news today, enjoy your trading.
             </span>
           </div>
@@ -158,9 +158,9 @@ export function HighImpactNews() {
                 <div className="flex items-center gap-3">
                   {/* FIXED: Added shrink-0 right below here */}
                   <div className="h-4 w-6 shrink-0 overflow-hidden rounded-[2px]">
-                    <img src="/assets/usa.jpg" alt="USA" className="h-full w-full object-cover" />
+                    <img src="/assets/usa.jpg" alt="USA Flag" className="h-full w-full object-cover" />
                   </div>
-                  <span className="text-[14px] font-semibold text-white tracking-tight">{event.title}</span>
+                  <span className="text-[15px] font-medium text-white tracking-tight">{event.title}</span>
                 </div>
                 
                 <div className="flex items-center gap-4">
