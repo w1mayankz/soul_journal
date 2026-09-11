@@ -365,7 +365,7 @@ export default function Dashboard() {
               {Array.from({ length: 16 }).map((_, i) => (
                 <div 
                   key={i} 
-                  className={`h-[22px] flex-1 rounded-full ${totalVolume === 0 ? 'bg-[#1F1F1F]' : i < greenBarsCount ? 'bg-[#009C00]' : 'bg-[#F44336]'}`} 
+                  className={`h-[34px] flex-1 rounded-full ${totalVolume === 0 ? 'bg-[#1F1F1F]' : i < greenBarsCount ? 'bg-[#009C00]' : 'bg-[#F44336]'}`} 
                 />
               ))}
             </div>
