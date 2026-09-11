@@ -327,7 +327,7 @@ export default function Dashboard() {
                 <span className="mt-0.5 text-[26px] font-medium tracking-tight text-white">{winrate}%</span>
               </div>
               {/* Increased from h-[52px] w-[52px] to h-[72px] w-[72px] */}
-              <div className="relative flex h-[102px] w-[102px] items-center justify-center">
+              <div className="relative flex h-[82px] w-[82px] items-center justify-center">
                 <svg className="h-full w-full -rotate-90 transform" viewBox="0 0 64 64">
                   <circle cx="32" cy="32" r={radius} stroke="#1F1F1F" strokeWidth="4" fill="none" />
                   <circle 
