@@ -48,16 +48,8 @@ export function HighImpactNews() {
   useEffect(() => {
     async function fetchNews() {
       try {
-        const targetUrl = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
-        
-        // Try direct fetch first (ForexFactory often allows this directly)
-        let res = await fetch(targetUrl, { cache: 'no-store' }).catch(() => null);
-        
-        // If direct fails, try proxy
-        if (!res || !res.ok) {
-          const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-          res = await fetch(proxyUrl, { cache: 'no-store' });
-        }
+                // Call our own Next.js API Route safely!
+        const res = await fetch('/api/news', { cache: 'no-store' });
 
         if (!res || !res.ok) throw new Error(`HTTP Error: ${res?.status || 'Network failure'}`);
         
