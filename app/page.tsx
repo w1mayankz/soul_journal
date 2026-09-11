@@ -361,7 +361,7 @@ export default function Dashboard() {
               <span className="mt-0.5 text-[26px] font-medium tracking-tight text-white">{profitFactorDisplay}</span>
             </div>
             
-            <div className="mt-4 flex items-center gap-1 w-full">
+            <div className="mt-4 flex items-center gap-[3px] w-full">
               {Array.from({ length: 16 }).map((_, i) => (
                 <div 
                   key={i} 
