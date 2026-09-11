@@ -238,7 +238,7 @@ export function AddTradeModal() {
               <label className="text-[14px] font-semibold text-white">Entry date *</label>
               <Popover.Root open={dateOpen} onOpenChange={setDateOpen}>
                 <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#1F1F1F] px-3 py-2.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
-                  {date ? `${format(date, 'yyyy/MM/dd')} ${time}` : <span className="text-neutral-600">Pick a date</span>}
+                  {date ? `${format(date, 'yyyy/MM/dd')} ${time}` : <span className="text-neutral-400">Pick a date</span>}
                   <Calendar01Icon size={20} className="text-white" />
                 </Popover.Trigger>
                 <Popover.Content align="start" className="z-[80] rounded-xl border border-neutral-800 bg-[#0A0A0A] p-3 animate-in fade-in-80 zoom-in-95">
@@ -305,7 +305,7 @@ export function AddTradeModal() {
                   value={pnl}
                   onChange={handlePnlChange}
                   placeholder="Enter your P&L" 
-                  className="flex-1 bg-transparent py-2.5 text-[14px] font-medium text-white outline-none placeholder:text-neutral-600"
+                  className="flex-1 bg-transparent py-2.5 text-[14px] font-medium text-white outline-none placeholder:text-neutral-400"
                 />
               </div>
             </div>
@@ -357,7 +357,7 @@ export function AddTradeModal() {
                   {rating !== null ? rating.toFixed(1) : '-'}
                 </span>
                 
-                <div className="relative flex h-3.5 flex-1 items-center rounded-full bg-[#1A1A1A]">
+                <div className="relative flex h-3.5 flex-1 items-center rounded-full bg-[#1F1F1F]">
                   <div 
                     className="h-full rounded-full bg-[#009C00] transition-all duration-75" 
                     style={{ width: `${ratingPercent}%` }}
@@ -404,7 +404,7 @@ export function AddTradeModal() {
                   <label className="text-[14px] font-semibold text-white">Exit date</label>
                   <Popover.Root open={exitDateOpen} onOpenChange={setExitDateOpen}>
                     <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#1F1F1F] px-3 py-2.5 text-[14px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
-                      {exitDate ? `${format(exitDate, 'yyyy/MM/dd')} ${exitTime}` : <span className="text-neutral-500">Enter trade exit date</span>}
+                      {exitDate ? `${format(exitDate, 'yyyy/MM/dd')} ${exitTime}` : <span className="text-neutral-400">Enter trade exit date</span>}
                       <Calendar01Icon size={18} className="text-white" />
                     </Popover.Trigger>
                     <Popover.Content align="start" className="z-[80] rounded-xl border border-neutral-800 bg-[#0A0A0A] p-3 shadow-2xl">
@@ -463,7 +463,7 @@ export function AddTradeModal() {
                         value={field.val}
                         onChange={(e) => field.setter(e.target.value)}
                         placeholder={field.ph} 
-                        className="flex-1 bg-transparent py-2.5 text-[14px] font-medium text-white outline-none placeholder:text-neutral-500"
+                        className="flex-1 bg-transparent py-2.5 text-[14px] font-medium text-white outline-none placeholder:text-neutral-400"
                       />
                     </div>
                   </div>
