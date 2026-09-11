@@ -24,18 +24,14 @@ export default function Dashboard() {
   
   const { trades, accounts, activeAccountId } = useTrades();
   
-  // Find the globally active account
   const activeAccount = accounts.find(a => a.id === activeAccountId);
   
-  // Dynamic Starting Balance based on the specific account selected
   const startingBalance = activeAccount ? activeAccount.initialBalance : 0;
   
-  // Filter trades to ONLY calculate PnL for the active account
   const accountTrades = trades.filter(t => t.accountId === activeAccountId);
   const totalRealPnl = accountTrades.reduce((sum, trade) => sum + trade.pnl, 0);
   const totalTradesCount = accountTrades.length;
   
-  // Current real live balance
   const realBalance = activeAccount ? activeAccount.currentBalance : 0;
 
   // --- STATS LOGIC: TOTAL TRADES ---
@@ -67,11 +63,35 @@ export default function Dashboard() {
     return { symbol: '-', count: 0, width: 0 };
   });
 
+  // --- STATS LOGIC: WINRATE (Excluding Breakeven) ---
+  const totalWinLossTrades = winningTrades + losingTrades;
+  const winrate = totalWinLossTrades > 0 ? Math.round((winningTrades / totalWinLossTrades) * 100) : 0;
+  
+  // SVG Donut Math
+  const radius = 26;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = totalWinLossTrades > 0 ? circumference - (winrate / 100) * circumference : circumference;
+
+  // --- STATS LOGIC: PROFIT FACTOR ---
+  const totalProfit = accountTrades.filter(t => t.pnl > 0).reduce((sum, t) => sum + t.pnl, 0);
+  const totalLoss = Math.abs(accountTrades.filter(t => t.pnl < 0).reduce((sum, t) => sum + t.pnl, 0));
+  
+  let profitFactorDisplay = '-';
+  if (totalLoss > 0) {
+    profitFactorDisplay = (totalProfit / totalLoss).toFixed(2);
+  } else if (totalProfit > 0) {
+    profitFactorDisplay = 'MAX';
+  }
+
+  // 16 Bar Math
+  const totalVolume = totalProfit + totalLoss;
+  const greenBarsCount = totalVolume > 0 ? Math.round((totalProfit / totalVolume) * 16) : 0;
+
+
   const buildEquityCurve = () => {
     const baseDate = new Date();
     const data = [];
     
-    // Calculates timeline data strictly using filtered trades and dynamic initial balance
     const getBalanceAtDate = (dateLimit: Date) => {
       const pnl = accountTrades
         .filter(t => new Date(t.date).getTime() <= dateLimit.getTime())
@@ -106,7 +126,6 @@ export default function Dashboard() {
       }
     }
     
-    // Ensure the final data point perfectly matches current live balance
     data[data.length - 1].value = realBalance;
     
     return data;
@@ -118,7 +137,6 @@ export default function Dashboard() {
     <div className="relative min-h-screen bg-black pb-24 font-sans text-white">
 
       <TopNavbar>
-        {/* TIMEFRAME DROPDOWN (ONLY ON DASHBOARD) */}
         <DropdownMenu.Root>
           <DropdownMenu.Trigger className="flex h-10 items-center gap-1.5 rounded-xl bg-[#141414] px-3 text-[14px] font-medium text-neutral-300 hover:bg-[#222] transition-colors active:scale-95 outline-none">
             {timeframe}
@@ -148,7 +166,6 @@ export default function Dashboard() {
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
 
-        {/* PNL VIEW TOGGLE DROPDOWN */}
         <DropdownMenu.Root>
           <DropdownMenu.Trigger className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#141414] text-neutral-300 hover:bg-[#222] transition-colors active:scale-95 outline-none">
             <DollarSquareIcon size={22} />
@@ -199,13 +216,12 @@ export default function Dashboard() {
               </p>
             </div>
             {displayView !== 'Hide P&L' && totalRealPnl !== 0 && (
-              <div className={`flex items-center rounded-md px-2 py-1 text-base font-medium tracking-tight ${totalRealPnl > 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+              <div className={`flex items-center rounded-md px-2 py-1 text-base font-medium tracking-tight ${totalRealPnl > 0 ? 'bg-[#009C00]/10 text-[#009C00]' : 'bg-[#F44336]/10 text-[#F44336]'}`}>
                 {totalRealPnl > 0 ? '+' : '-'}${Math.abs(totalRealPnl).toLocaleString()}
               </div>
             )}
           </div>
 
-          {/* RECHARTS AREA CHART */}
           <div className="mt-6 h-[180px] -mx-5">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
@@ -245,16 +261,18 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* METRICS CARDS ROW */}
+      {/* METRICS CARDS: Grid ensures all 4 cards have perfectly identical heights & widths */}
       <section className="mt-3 px-5">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 auto-rows-fr gap-3">
           
           {/* MOST TRADED ASSETS */}
-          <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] pt-3 pr-3 pl-3 pb-5">
-            <span className="text-[15px] font-semibold text-neutral-600 tracking-tight">Most Traded Assets</span>
-            <span className="mt-0.5 text-[26px] font-medium tracking-tight text-white">{topAssetSymbol}</span>
+          <div className="flex flex-col justify-between h-full rounded-2xl border border-neutral-800/60 bg-[#090909] pt-3 pr-3 pl-3 pb-5">
+            <div>
+              <span className="text-[15px] font-semibold text-neutral-600 tracking-tight">Most Traded Assets</span>
+              <div className="mt-0.5 text-[26px] font-medium tracking-tight text-white">{topAssetSymbol}</div>
+            </div>
             
-            <div className="mt-4 flex flex-col gap-3">
+            <div className="mt-auto pt-4 flex flex-col gap-3">
               {assetRows.map((row, idx) => (
                 <div key={idx} className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between text-[14px] font-medium">
@@ -273,11 +291,13 @@ export default function Dashboard() {
           </div>
 
           {/* TOTAL TRADES */}
-          <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] pt-3 pr-3 pl-3 pb-5">
-            <span className="text-[15px] font-semibold tracking-tight text-neutral-600">Total Trades</span>
-            <span className="mt-0.5 text-[26px] font-medium tracking-tight text-white">{totalTradesCount}</span>
+          <div className="flex flex-col justify-between h-full rounded-2xl border border-neutral-800/60 bg-[#090909] pt-3 pr-3 pl-3 pb-5">
+            <div>
+              <span className="text-[15px] font-semibold tracking-tight text-neutral-600">Total Trades</span>
+              <div className="mt-0.5 text-[26px] font-medium tracking-tight text-white">{totalTradesCount}</div>
+            </div>
             
-            <div className="mt-4 flex flex-col gap-3">
+            <div className="mt-auto pt-4 flex flex-col gap-3">
               {tradeBreakdown.map((row, idx) => {
                 const width = totalTradesCount > 0 ? (row.count / totalTradesCount) * 100 : 0;
                 return (
@@ -295,6 +315,72 @@ export default function Dashboard() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+
+          {/* TRADE WINRATE */}
+          <div className="flex flex-col justify-between h-full rounded-2xl border border-neutral-800/60 bg-[#090909] pt-3 pr-3 pl-3 pb-5">
+            <div className="flex items-start justify-between">
+              <div className="flex flex-col">
+                <span className="text-[15px] font-semibold tracking-tight text-neutral-600">Trade Winrate</span>
+                <span className="mt-0.5 text-[26px] font-medium tracking-tight text-white">{winrate}%</span>
+              </div>
+              <div className="relative flex h-[52px] w-[52px] items-center justify-center">
+                <svg className="h-full w-full -rotate-90 transform" viewBox="0 0 64 64">
+                  <circle cx="32" cy="32" r={radius} stroke="#1F1F1F" strokeWidth="6" fill="none" />
+                  <circle 
+                    cx="32" cy="32" r={radius} 
+                    stroke="#009C00" strokeWidth="6" fill="none" 
+                    strokeDasharray={circumference} 
+                    strokeDashoffset={strokeDashoffset} 
+                    strokeLinecap="round"
+                    className="transition-all duration-1000 ease-out"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <div className="mt-auto pt-5 flex flex-col gap-2">
+              <div className="flex items-center justify-between text-[14px] font-medium">
+                <span className="text-neutral-400">Losing trades</span>
+                <span className="text-white">{losingTrades > 0 ? losingTrades : '-'}</span>
+              </div>
+              <div className="flex items-center justify-between text-[14px] font-medium">
+                <span className="text-neutral-400">Winning trades</span>
+                <span className="text-white">{winningTrades > 0 ? winningTrades : '-'}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* PROFIT FACTOR */}
+          <div className="flex flex-col justify-between h-full rounded-2xl border border-neutral-800/60 bg-[#090909] pt-3 pr-3 pl-3 pb-5">
+            <div className="flex flex-col">
+              <span className="text-[15px] font-semibold tracking-tight text-neutral-600">Profit Factor</span>
+              <span className="mt-0.5 text-[26px] font-medium tracking-tight text-white">{profitFactorDisplay}</span>
+            </div>
+            
+            <div className="mt-4 flex items-center gap-[2px] w-full">
+              {Array.from({ length: 16 }).map((_, i) => (
+                <div 
+                  key={i} 
+                  className={`h-[22px] flex-1 rounded-[2px] ${totalVolume === 0 ? 'bg-[#1F1F1F]' : i < greenBarsCount ? 'bg-[#009C00]' : 'bg-[#F44336]'}`} 
+                />
+              ))}
+            </div>
+
+            <div className="mt-auto pt-5 flex flex-col gap-2">
+              <div className="flex items-center justify-between text-[14px] font-medium">
+                <span className="text-neutral-400">Total profit</span>
+                <span className="text-[#009C00]">
+                  {totalProfit > 0 ? `+$${totalProfit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : '-'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-[14px] font-medium">
+                <span className="text-neutral-400">Total loss</span>
+                <span className="text-[#F44336]">
+                  {totalLoss > 0 ? `-$${totalLoss.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : '-'}
+                </span>
+              </div>
             </div>
           </div>
 
