@@ -49,7 +49,7 @@ export function HighImpactNews() {
     async function fetchNews() {
       try {
         // Call our own Next.js API Route safely!
-        const res = await fetch('/api/news', { cache: 'no-store' });
+        const res = await fetch('/api/news');
 
         if (!res || !res.ok) throw new Error(`HTTP Error: ${res?.status || 'Network failure'}`);
         
@@ -84,7 +84,11 @@ export function HighImpactNews() {
     fetchNews();
   }, []);
 
-  const filteredEvents = events.filter(e => e.importance >= minImportance);
+  // Dynamically filters out news the exact minute it passes in real-time
+  const filteredEvents = events.filter(e => 
+    e.importance >= minImportance && 
+    e.dateObj.getTime() > now.getTime()
+  );
   const isFilterActive = minImportance > 1;
 
   return (
