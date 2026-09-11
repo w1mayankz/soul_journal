@@ -262,8 +262,8 @@ export default function Dashboard() {
       </section>
 
       {/* METRICS CARDS: Grid ensures all 4 cards have perfectly identical heights & widths */}
-      <section className="mt-3 px-5">
-        <div className="grid grid-cols-2 auto-rows-fr gap-3">
+      <section className="mt-2 px-5">
+        <div className="grid grid-cols-2 auto-rows-fr gap-2">
           
           {/* MOST TRADED ASSETS */}
           <div className="flex flex-col justify-between h-full rounded-2xl border border-neutral-800/60 bg-[#090909] pt-3 pr-3 pl-3 pb-5">
@@ -363,7 +363,7 @@ export default function Dashboard() {
               {Array.from({ length: 16 }).map((_, i) => (
                 <div 
                   key={i} 
-                  className={`h-[22px] flex-1 rounded-[2px] ${totalVolume === 0 ? 'bg-[#1F1F1F]' : i < greenBarsCount ? 'bg-[#009C00]' : 'bg-[#F44336]'}`} 
+                  className={`h-[22px] flex-1 rounded-full ${totalVolume === 0 ? 'bg-[#1F1F1F]' : i < greenBarsCount ? 'bg-[#009C00]' : 'bg-[#F44336]'}`} 
                 />
               ))}
             </div>
