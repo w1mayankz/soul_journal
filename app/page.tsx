@@ -250,18 +250,18 @@ export default function Dashboard() {
         <div className="grid grid-cols-2 gap-3">
           
           {/* MOST TRADED ASSETS */}
-          <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] p-3">
+          <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] pt-3 pr-3 pl-3 pb-5">
             <span className="text-[15px] font-semibold text-neutral-600 tracking-tight">Most Traded Assets</span>
-            <span className="mt-1 text-[26px] font-medium tracking-tight text-white">{topAssetSymbol}</span>
+            <span className="mt-0.5 text-[26px] font-medium tracking-tight text-white">{topAssetSymbol}</span>
             
-            <div className="mt-5 flex flex-col gap-3">
+            <div className="mt-4 flex flex-col gap-3">
               {assetRows.map((row, idx) => (
                 <div key={idx} className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between text-[13px] font-medium">
+                  <div className="flex items-center justify-between text-[14px] font-medium">
                     <span className="text-neutral-400">{row.symbol}</span>
                     <span className="text-white">{row.count > 0 ? row.count : '-'}</span>
                   </div>
-                  <div className="h-[2px] w-full rounded-full bg-[#1A1A1A] overflow-hidden">
+                  <div className="h-[2px] w-full rounded-full bg-[#1F1F1F] overflow-hidden">
                     <div 
                       className="h-full rounded-full bg-white transition-all duration-500" 
                       style={{ width: `${row.width}%` }}
@@ -273,20 +273,20 @@ export default function Dashboard() {
           </div>
 
           {/* TOTAL TRADES */}
-          <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] p-3">
+          <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] pt-3 pr-3 pl-3 pb-5">
             <span className="text-[15px] font-semibold tracking-tight text-neutral-600">Total Trades</span>
-            <span className="mt-1 text-[26px] font-medium tracking-tight text-white">{totalTradesCount}</span>
+            <span className="mt-0.5 text-[26px] font-medium tracking-tight text-white">{totalTradesCount}</span>
             
-            <div className="mt-5 flex flex-col gap-3">
+            <div className="mt-4 flex flex-col gap-3">
               {tradeBreakdown.map((row, idx) => {
                 const width = totalTradesCount > 0 ? (row.count / totalTradesCount) * 100 : 0;
                 return (
                   <div key={idx} className="flex flex-col gap-1.5">
-                    <div className="flex items-center justify-between text-[13px] font-medium">
+                    <div className="flex items-center justify-between text-[14px] font-medium">
                       <span className="text-neutral-400">{row.label}</span>
                       <span className="text-white">{row.count > 0 ? row.count : '-'}</span>
                     </div>
-                    <div className="h-[2px] w-full rounded-full bg-[#1A1A1A] overflow-hidden">
+                    <div className="h-[2px] w-full rounded-full bg-[#1F1F1F] overflow-hidden">
                       <div 
                         className="h-full rounded-full bg-white transition-all duration-500" 
                         style={{ width: `${width}%` }}
