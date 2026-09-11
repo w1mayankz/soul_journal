@@ -202,17 +202,17 @@ export function AddTradeModal() {
             <div className="flex flex-col gap-2">
               <label className="text-[14px] font-semibold text-white">Symbol *</label>
               <Popover.Root open={symbolOpen} onOpenChange={setSymbolOpen}>
-                <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#141414] px-3 py-2.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
+                <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#1F1F1F] px-3 py-2.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
                   {symbol || <span className="text-neutral-400">Select Symbol</span>}
                   <ArrowDown01Icon size={20} className="text-neutral-400" />
                 </Popover.Trigger>
-                <Popover.Content align="start" className="z-[80] w-[calc(95vw-40px)] max-w-[440px] rounded-xl border border-neutral-800 bg-neutral-500 p-0 shadow-2xl animate-in fade-in-80 zoom-in-95">
+                <Popover.Content align="start" className="z-[80] w-[calc(95vw-40px)] max-w-[440px] rounded-xl border border-neutral-800 bg-[#090909] p-0 shadow-2xl animate-in fade-in-80 zoom-in-95">
                   <div className="flex items-center border-b border-neutral-800 px-3 py-2">
-                    <Search01Icon size={16} className="text-neutral-500 mr-2" />
+                    <Search01Icon size={18} className="text-[#A3A3A3] mr-2" />
                     <input 
                       type="text" 
                       placeholder="Search Symbols" 
-                      className="flex-1 bg-transparent py-1.5 text-[14px] text-white outline-none placeholder:text-neutral-600"
+                      className="flex-1 bg-transparent py-1.5 text-[14px] text-white font-semibold outline-none placeholder:text-neutral-600"
                       value={symbolSearch}
                       onChange={(e) => setSymbolSearch(e.target.value)}
                     />
@@ -237,7 +237,7 @@ export function AddTradeModal() {
             <div className="flex flex-col gap-2">
               <label className="text-[14px] font-semibold text-white">Entry date *</label>
               <Popover.Root open={dateOpen} onOpenChange={setDateOpen}>
-                <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#141414] px-3 py-2.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
+                <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#1F1F1F] px-3 py-2.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
                   {date ? `${format(date, 'yyyy/MM/dd')} ${time}` : <span className="text-neutral-600">Pick a date</span>}
                   <Calendar01Icon size={20} className="text-white" />
                 </Popover.Trigger>
@@ -285,10 +285,10 @@ export function AddTradeModal() {
               <label className="text-[14px] font-semibold text-white">Side *</label>
               <Tabs.Root value={side} onValueChange={setSide}>
                 <Tabs.List className="flex w-[160px] gap-1 rounded-xl p-1">
-                  <Tabs.Trigger value="buy" className="flex-1 rounded-lg py-2 text-[14px] font-semibold text-neutral-500 transition-all data-[state=active]:bg-[#262626] data-[state=active]:text-white outline-none">
+                  <Tabs.Trigger value="buy" className="flex-1 rounded-lg py-2 text-[14px] font-semibold text-neutral-500 transition-all data-[state=active]:bg-[#1F1F1F] data-[state=active]:text-white outline-none">
                     Buy ↑
                   </Tabs.Trigger>
-                  <Tabs.Trigger value="sell" className="flex-1 rounded-lg py-2 text-[14px] font-semibold text-neutral-500 transition-all data-[state=active]:bg-[#262626] data-[state=active]:text-white outline-none">
+                  <Tabs.Trigger value="sell" className="flex-1 rounded-lg py-2 text-[14px] font-semibold text-neutral-500 transition-all data-[state=active]:bg-[#1F1F1F] data-[state=active]:text-white outline-none">
                     Sell ↓
                   </Tabs.Trigger>
                 </Tabs.List>
@@ -298,14 +298,14 @@ export function AddTradeModal() {
             {/* P&L */}
             <div className="flex flex-col gap-2">
               <label className="text-[14px] font-semibold text-white">P&L *</label>
-              <div className={`flex items-center rounded-xl bg-[#141414] px-4 border transition-colors ${pnlError ? 'border-[#F44336]' : 'border-transparent focus-within:border-neutral-700'}`}>
-                <span className="text-neutral-500 mr-2 font-medium">$</span>
+              <div className={`flex items-center rounded-xl bg-[#1F1F1F] px-3 border transition-colors ${pnlError ? 'border-[#F44336]' : 'border-transparent focus-within:border-neutral-700'}`}>
+                <span className="text-neutral-400 mr-2 font-medium">$</span>
                 <input 
                   type="text" 
                   value={pnl}
                   onChange={handlePnlChange}
                   placeholder="Enter your P&L" 
-                  className="flex-1 bg-transparent py-3.5 text-[15px] font-medium text-white outline-none placeholder:text-neutral-600"
+                  className="flex-1 bg-transparent py-2.5 text-[14px] font-medium text-white outline-none placeholder:text-neutral-600"
                 />
               </div>
             </div>
@@ -318,7 +318,7 @@ export function AddTradeModal() {
                   type="text"
                   value={rrInput}
                   onChange={handleRrInputChange}
-                  className="w-16 rounded-xl bg-[#141414] py-2 px-2 text-center text-[13px] font-medium text-white outline-none focus:ring-1 focus:ring-neutral-700 transition-shadow"
+                  className="w-16 rounded-xl bg-[#141414] py-2 px-2 text-center text-[15px] font-medium text-white outline-none focus:ring-1 focus:ring-neutral-700 transition-shadow"
                 />
                 
                 <div className="relative flex h-3.5 flex-1 items-center gap-[2px]">
@@ -340,7 +340,7 @@ export function AddTradeModal() {
                   {!isDefaultRr && (
                     <button
                       onClick={() => { setRisk(1); setReward(1); setRrInput('1:1'); }}
-                      className="text-neutral-500 hover:text-white outline-none transition-colors"
+                      className="text-white hover:text-white outline-none transition-colors"
                     >
                       <Cancel01Icon size={18} />
                     </button>
@@ -353,7 +353,7 @@ export function AddTradeModal() {
             <div className="flex flex-col gap-2 pt-1">
               <label className="text-[14px] font-semibold text-white">Rating</label>
               <div className="flex items-center gap-3">
-                <span className="w-6 text-[13px] font-medium text-neutral-400">
+                <span className="w-6 text-[14px] font-medium text-neutral-400">
                   {rating !== null ? rating.toFixed(1) : '-'}
                 </span>
                 
@@ -377,7 +377,7 @@ export function AddTradeModal() {
                   {rating !== null && (
                     <button
                       onClick={() => setRating(null)}
-                      className="text-neutral-500 hover:text-white outline-none transition-colors"
+                      className="text-neutral-400 hover:text-white outline-none transition-colors"
                     >
                       <Cancel01Icon size={18} />
                     </button>
@@ -403,9 +403,9 @@ export function AddTradeModal() {
                 <div className="flex flex-col gap-2">
                   <label className="text-[14px] font-semibold text-white">Exit date</label>
                   <Popover.Root open={exitDateOpen} onOpenChange={setExitDateOpen}>
-                    <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#141414] px-4 py-3.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
-                      {exitDate ? `${format(exitDate, 'yyyy/MM/dd')} ${exitTime}` : <span className="text-neutral-600">Enter trade exit date</span>}
-                      <Calendar01Icon size={18} className="text-neutral-500" />
+                    <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#1F1F1F] px-3 py-2.5 text-[14px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
+                      {exitDate ? `${format(exitDate, 'yyyy/MM/dd')} ${exitTime}` : <span className="text-neutral-500">Enter trade exit date</span>}
+                      <Calendar01Icon size={18} className="text-white" />
                     </Popover.Trigger>
                     <Popover.Content align="start" className="z-[80] rounded-xl border border-neutral-800 bg-[#0A0A0A] p-3 shadow-2xl">
                       <DayPicker
@@ -455,15 +455,15 @@ export function AddTradeModal() {
                   { label: 'Swap', val: swap, setter: setSwap, ph: 'Enter trade swap', currency: true },
                 ].map((field, idx) => (
                   <div key={idx} className="flex flex-col gap-2">
-                    <label className="text-[14px] font-medium text-white">{field.label}</label>
-                    <div className="flex items-center rounded-xl bg-[#141414] px-4 border border-transparent focus-within:border-neutral-700 transition-colors">
+                    <label className="text-[14px] font-semibold text-white">{field.label}</label>
+                    <div className="flex items-center rounded-xl bg-[#1F1F1F] px-4 py-2.5 border border-transparent focus-within:border-neutral-700 transition-colors">
                       {field.currency && <span className="text-neutral-500 mr-2 font-medium">$</span>}
                       <input 
                         type="text" 
                         value={field.val}
                         onChange={(e) => field.setter(e.target.value)}
                         placeholder={field.ph} 
-                        className="flex-1 bg-transparent py-3.5 text-[15px] font-medium text-white outline-none placeholder:text-neutral-600"
+                        className="flex-1 bg-transparent py-2.5 text-[14px] font-medium text-white outline-none placeholder:text-neutral-600"
                       />
                     </div>
                   </div>
@@ -486,9 +486,9 @@ export function AddTradeModal() {
             <div className="flex flex-col gap-2 mt-2">
               <label className="text-[14px] font-semibold text-white">Strategy</label>
               <Popover.Root open={strategyOpen} onOpenChange={setStrategyOpen}>
-                <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#141414] px-4 py-3.5 text-[15px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
+                <Popover.Trigger className="flex w-full items-center justify-between rounded-xl bg-[#1F1F1F] px-3 py-2.5 text-[14px] font-medium text-white outline-none active:scale-[0.99] transition-transform">
                   {strategy}
-                  <ArrowDown01Icon size={18} className="text-neutral-500" />
+                  <ArrowDown01Icon size={18} className="text-neutral-400" />
                 </Popover.Trigger>
                 <Popover.Content align="start" className="z-[80] w-[calc(95vw-40px)] max-w-[440px] rounded-xl border border-neutral-800 bg-[#0A0A0A] p-1 shadow-2xl animate-in fade-in-80 zoom-in-95">
                   {STRATEGIES.map(s => (
@@ -502,18 +502,18 @@ export function AddTradeModal() {
                   ))}
                 </Popover.Content>
               </Popover.Root>
-              <p className="text-[12px] text-neutral-500 font-medium px-1">Select a strategy to set confluences.</p>
+              <p className="text-[13px] text-neutral-400 font-semibold px-1">Select a strategy to set confluences.</p>
             </div>
 
           </div>
 
           <div className="mt-2 flex items-center justify-end gap-3 pt-4 border-t border-neutral-800/60">
-            <Dialog.Close className="rounded-xl px-5 py-2.5 text-[14px] font-semibold text-neutral-400 hover:text-white transition-colors outline-none bg-[#141414] hover:bg-[#1A1A1A]">
+            <Dialog.Close className="rounded-xl px-5 py-2.5 text-[14px] font-medium text-neutral-400 hover:text-white transition-colors outline-none bg-[#141414] hover:bg-[#1A1A1A]">
               Cancel
             </Dialog.Close>
             <button 
               onClick={handleSave}
-              className="rounded-xl bg-white px-5 py-2.5 text-[14px] font-semibold text-black active:scale-95 transition-transform outline-none"
+              className="rounded-xl bg-white px-5 py-2.5 text-[14px] font-medium text-black active:scale-95 transition-transform outline-none"
             >
               Save
             </button>
