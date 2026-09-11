@@ -1,42 +1,45 @@
 import { NextResponse } from 'next/server';
 
-export const dynamic = 'force-dynamic';
+// Tell Next.js to cache this route for 1800 seconds (30 minutes)
+export const revalidate = 1800;
 
 export async function GET() {
   const targetUrl = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
+  
+  // A list of fallback routes: Direct -> Proxy 1 -> Proxy 2
+  const fetchUrls = [
+    targetUrl,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
+    `https://api.codetabs.com/v1/proxy?quest=${targetUrl}`
+  ];
 
-  try {
-    // Attempt 1: Direct Fetch
-    let response = await fetch(targetUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'application/json'
-      },
-      cache: 'no-store'
-    });
-
-    // Attempt 2: Fallback to Proxy if Direct Fetch is blocked (e.g. 403 Forbidden)
-    if (!response.ok) {
-      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-      response = await fetch(proxyUrl, { cache: 'no-store' });
-    }
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch data from both sources. Status: ${response.status}`);
-    }
-    
-    // Catch HTML Cloudflare pages that try to masquerade as JSON
-    const textData = await response.text();
-    let jsonData;
+  for (const url of fetchUrls) {
     try {
-      jsonData = JSON.parse(textData);
-    } catch (e) {
-      throw new Error('Received HTML instead of JSON (Blocked by Cloudflare)');
-    }
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept': 'application/json'
+        },
+        // Cache the fetch itself for 30 minutes
+        next: { revalidate: 1800 } 
+      });
 
-    return NextResponse.json(jsonData);
-    
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+      if (!response.ok) continue; // If blocked, move to the next URL
+      
+      const textData = await response.text();
+      const jsonData = JSON.parse(textData); // This will purposefully fail if Cloudflare returns an HTML security page
+      
+      return NextResponse.json(jsonData);
+      
+    } catch (error) {
+      // Silently catch the error and let the loop try the next proxy url
+      continue;
+    }
   }
+
+  // If ALL proxies fail, return a clean error
+  return NextResponse.json(
+    { error: "Data source temporarily blocked by Cloudflare. Data will refresh shortly." }, 
+    { status: 500 }
+  );
 }
