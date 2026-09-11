@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { TopNavbar } from '../components/top-navbar';
 import { 
   DollarSquareIcon, 
@@ -132,6 +133,9 @@ export default function Dashboard() {
   };
 
   const chartData = buildEquityCurve();
+  const recentTrades = [...accountTrades]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 4);
 
   return (
     <div className="relative min-h-screen bg-black pb-24 font-sans text-white">
@@ -386,6 +390,62 @@ export default function Dashboard() {
             </div>
           </div>
 
+        </div>
+      </section>
+
+      {/* RECENT TRADES */}
+      <section className="mt-3 px-5">
+        <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col">
+              <span className="text-[16px] font-semibold tracking-tight text-white">Recent Trades</span>
+              <span className="text-[13px] font-medium text-neutral-500">Last 4 registered trades</span>
+            </div>
+            <Link 
+              href="/trades" 
+              className="flex items-center gap-1.5 rounded-lg bg-[#141414] px-3 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-[#1A1A1A] active:scale-95 outline-none"
+            >
+              See all →
+            </Link>
+          </div>
+
+          {recentTrades.length === 0 ? (
+            <div className="flex min-h-[120px] items-center justify-center">
+              <span className="text-[13px] font-medium text-neutral-600">
+                You don't have any trades yet. Register a trade to get started.
+              </span>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3">
+              {recentTrades.map(trade => {
+                const isWin = trade.pnl > 0;
+                const isLoss = trade.pnl < 0;
+                const pnlColor = isWin ? 'text-[#009C00]' : isLoss ? 'text-[#F44336]' : 'text-neutral-400';
+                const pnlSymbol = isWin ? '▴' : isLoss ? '▾' : '';
+                const sideSymbol = trade.side.toLowerCase() === 'buy' ? '↑' : '↓';
+                const sideColor = trade.side.toLowerCase() === 'buy' ? 'text-[#009C00]' : 'text-[#F44336]';
+
+                return (
+                  <div key={trade.id} className="flex flex-col rounded-xl border border-neutral-800/60 bg-[#0F0F0F] p-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[14px] font-semibold text-white tracking-tight">{trade.symbol}</span>
+                      <span className={`text-[13px] font-semibold tracking-tight ${pnlColor}`}>
+                        {pnlSymbol} {isLoss ? '' : ''}${Math.abs(trade.pnl).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2})}
+                      </span>
+                    </div>
+                    <div className="mt-3 flex items-center justify-between">
+                      <span className="text-[13px] font-medium text-white capitalize">
+                        {trade.side} <span className={sideColor}>{sideSymbol}</span>
+                      </span>
+                      <span className="text-[12px] font-medium text-neutral-500">
+                        {format(new Date(trade.date), 'EEE dd/MM')}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
       
