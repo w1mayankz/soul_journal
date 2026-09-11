@@ -126,9 +126,11 @@ export function HighImpactNews() {
             <div className="h-[52px] w-full animate-pulse rounded-xl border border-neutral-800/40 bg-[#0A0A0A]"></div>
             <div className="h-[52px] w-full animate-pulse rounded-xl border border-neutral-800/40 bg-[#0A0A0A]"></div>
           </>
-        ) : filteredEvents.length === 0 ? (
-          <div className="flex min-h-[80px] items-center justify-center">
-            <span className="text-[13px] font-medium text-neutral-600">No upcoming news matches your filter.</span>
+                ) : filteredEvents.length === 0 ? (
+          <div className="flex min-h-[120px] items-center justify-center px-4 text-center">
+            <span className="text-[16px] font-medium text-neutral-600">
+              There is no high impact news today, enjoy your trading.
+            </span>
           </div>
         ) : (
           filteredEvents.map(event => {
