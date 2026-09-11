@@ -320,12 +320,14 @@ export default function Dashboard() {
 
           {/* TRADE WINRATE */}
           <div className="flex flex-col justify-between h-full rounded-2xl border border-neutral-800/60 bg-[#090909] pt-3 pr-3 pl-3 pb-5">
-            <div className="flex items-start justify-between">
+            {/* Changed items-start to items-center here */}
+            <div className="flex items-center justify-between">
               <div className="flex flex-col">
                 <span className="text-[15px] font-semibold tracking-tight text-neutral-600">Trade Winrate</span>
                 <span className="mt-0.5 text-[26px] font-medium tracking-tight text-white">{winrate}%</span>
               </div>
-              <div className="relative flex h-[52px] w-[52px] items-center justify-center">
+              {/* Increased from h-[52px] w-[52px] to h-[72px] w-[72px] */}
+              <div className="relative flex h-[72px] w-[72px] items-center justify-center">
                 <svg className="h-full w-full -rotate-90 transform" viewBox="0 0 64 64">
                   <circle cx="32" cy="32" r={radius} stroke="#1F1F1F" strokeWidth="6" fill="none" />
                   <circle 
@@ -359,11 +361,11 @@ export default function Dashboard() {
               <span className="mt-0.5 text-[26px] font-medium tracking-tight text-white">{profitFactorDisplay}</span>
             </div>
             
-            <div className="mt-3 flex items-center gap-[2px] w-full">
+            <div className="mt-4 flex items-center gap-[2px] w-full">
               {Array.from({ length: 16 }).map((_, i) => (
                 <div 
                   key={i} 
-                  className={`h-[26px] flex-1 rounded-full ${totalVolume === 0 ? 'bg-[#1F1F1F]' : i < greenBarsCount ? 'bg-[#009C00]' : 'bg-[#F44336]'}`} 
+                  className={`h-[22px] flex-1 rounded-full ${totalVolume === 0 ? 'bg-[#1F1F1F]' : i < greenBarsCount ? 'bg-[#009C00]' : 'bg-[#F44336]'}`} 
                 />
               ))}
             </div>
