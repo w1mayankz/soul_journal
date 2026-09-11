@@ -33,9 +33,39 @@ export default function Dashboard() {
   // Filter trades to ONLY calculate PnL for the active account
   const accountTrades = trades.filter(t => t.accountId === activeAccountId);
   const totalRealPnl = accountTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+  const totalTradesCount = accountTrades.length;
   
   // Current real live balance
   const realBalance = activeAccount ? activeAccount.currentBalance : 0;
+
+  // --- STATS LOGIC: TOTAL TRADES ---
+  const winningTrades = accountTrades.filter(t => t.pnl > 0).length;
+  const losingTrades = accountTrades.filter(t => t.pnl < 0).length;
+  const breakevenTrades = accountTrades.filter(t => t.pnl === 0).length;
+
+  const tradeBreakdown = [
+    { label: 'Winning', count: winningTrades },
+    { label: 'Breakeven', count: breakevenTrades },
+    { label: 'Losing', count: losingTrades },
+  ];
+
+  // --- STATS LOGIC: MOST TRADED ASSETS ---
+  const assetCounts = accountTrades.reduce((acc, trade) => {
+    acc[trade.symbol] = (acc[trade.symbol] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const sortedAssets = Object.entries(assetCounts).sort((a, b) => b[1] - a[1]);
+  const topAssets = sortedAssets.slice(0, 3);
+  const topAssetSymbol = topAssets.length > 0 ? topAssets[0][0] : '-';
+
+  const assetRows = [0, 1, 2].map(index => {
+    if (topAssets[index]) {
+      const [symbol, count] = topAssets[index];
+      return { symbol, count, width: totalTradesCount > 0 ? (count / totalTradesCount) * 100 : 0 };
+    }
+    return { symbol: '-', count: 0, width: 0 };
+  });
 
   const buildEquityCurve = () => {
     const baseDate = new Date();
@@ -212,6 +242,62 @@ export default function Dashboard() {
               </AreaChart>
             </ResponsiveContainer>
           </div>
+        </div>
+      </section>
+
+      {/* METRICS CARDS ROW */}
+      <section className="mt-3 px-5">
+        <div className="grid grid-cols-2 gap-3">
+          
+          {/* MOST TRADED ASSETS */}
+          <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] p-3">
+            <span className="text-[15px] font-semibold text-neutral-600 tracking-tight">Most Traded Assets</span>
+            <span className="mt-1 text-[26px] font-medium tracking-tight text-white">{topAssetSymbol}</span>
+            
+            <div className="mt-5 flex flex-col gap-3">
+              {assetRows.map((row, idx) => (
+                <div key={idx} className="flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between text-[13px] font-medium">
+                    <span className="text-neutral-400">{row.symbol}</span>
+                    <span className="text-white">{row.count > 0 ? row.count : '-'}</span>
+                  </div>
+                  <div className="h-[2px] w-full rounded-full bg-[#1A1A1A] overflow-hidden">
+                    <div 
+                      className="h-full rounded-full bg-white transition-all duration-500" 
+                      style={{ width: `${row.width}%` }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* TOTAL TRADES */}
+          <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] p-3">
+            <span className="text-[15px] font-semibold tracking-tight text-neutral-600">Total Trades</span>
+            <span className="mt-1 text-[26px] font-medium tracking-tight text-white">{totalTradesCount}</span>
+            
+            <div className="mt-5 flex flex-col gap-3">
+              {tradeBreakdown.map((row, idx) => {
+                const width = totalTradesCount > 0 ? (row.count / totalTradesCount) * 100 : 0;
+                return (
+                  <div key={idx} className="flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between text-[13px] font-medium">
+                      <span className="text-neutral-400">{row.label}</span>
+                      <span className="text-white">{row.count > 0 ? row.count : '-'}</span>
+                    </div>
+                    <div className="h-[2px] w-full rounded-full bg-[#1A1A1A] overflow-hidden">
+                      <div 
+                        className="h-full rounded-full bg-white transition-all duration-500" 
+                        style={{ width: `${width}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
         </div>
       </section>
       
