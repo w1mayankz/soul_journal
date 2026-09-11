@@ -156,7 +156,8 @@ export function HighImpactNews() {
             return (
               <div key={event.id} className="flex items-center justify-between rounded-xl border border-neutral-800/60 bg-[#090909] p-3 px-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-4 w-6 overflow-hidden rounded-[2px]">
+                  {/* FIXED: Added shrink-0 right below here */}
+                  <div className="h-4 w-6 shrink-0 overflow-hidden rounded-[2px]">
                     <img src="/assets/usa.jpg" alt="USA" className="h-full w-full object-cover" />
                   </div>
                   <span className="text-[14px] font-semibold text-white tracking-tight">{event.title}</span>
