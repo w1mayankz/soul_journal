@@ -18,6 +18,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { subDays, subHours, subMonths, subYears, format } from 'date-fns';
 import { useTrades } from '../context/trades-context';
+import { HighImpactNews } from '../components/high-impact-news';
 
 export default function Dashboard() {
   const [timeframe, setTimeframe] = useState('Week');
@@ -447,6 +448,11 @@ export default function Dashboard() {
             </div>
           )}
         </div>
+      </section>
+
+      {/* ECONOMIC CALENDAR */}
+      <section className="mt-3 px-5 mb-3">
+         <HighImpactNews />
       </section>
       
     </div>
