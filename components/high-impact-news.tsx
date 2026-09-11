@@ -3,9 +3,8 @@
 import { useState, useEffect } from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { FilterIcon } from 'hugeicons-react';
-import { parseISO, differenceInMinutes, format, isToday } from 'date-fns';
+import { parseISO, differenceInMinutes, format } from 'date-fns';
 
-// SVG Star to guarantee perfect filled/hollow rendering without Pro icon libraries
 const Star = ({ filled }: { filled: boolean }) => (
   <svg 
     width="14" height="14" viewBox="0 0 24 24" 
@@ -37,35 +36,37 @@ type ParsedEvent = {
 export function HighImpactNews() {
   const [events, setEvents] = useState<ParsedEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [minImportance, setMinImportance] = useState<number>(1);
   const [now, setNow] = useState(new Date());
 
-  // Update current time every minute for the countdowns
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(interval);
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     async function fetchNews() {
       try {
-        // 1. Bypass browser caching with a timestamp
-        const timestamp = new Date().getTime();
-        const targetUrl = `https://nfs.faireconomy.media/ff_calendar_thisweek.json?_t=${timestamp}`;
+        const targetUrl = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
         
-        // 2. Bypass CORS restrictions using a free raw proxy
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+        // Try direct fetch first (ForexFactory often allows this directly)
+        let res = await fetch(targetUrl, { cache: 'no-store' }).catch(() => null);
         
-        const res = await fetch(proxyUrl, { cache: 'no-store' });
+        // If direct fails, try proxy
+        if (!res || !res.ok) {
+          const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+          res = await fetch(proxyUrl, { cache: 'no-store' });
+        }
+
+        if (!res || !res.ok) throw new Error(`HTTP Error: ${res?.status || 'Network failure'}`);
         
-        if (!res.ok) throw new Error('Network response was not ok');
-        
-        const data: FFEvent[] = await res.json();
+        const data = await res.json();
 
         const parsed = data
-          .filter(item => item.country.trim().toUpperCase() === 'USD')
-          .map((item, index) => {
-            let importance = 1; // Low
+          .filter((item: FFEvent) => item.country.trim().toUpperCase() === 'USD')
+          .map((item: FFEvent, index: number) => {
+            let importance = 1; 
             if (item.impact === 'High' || item.impact === 'Holiday') importance = 3;
             else if (item.impact === 'Medium') importance = 2;
 
@@ -76,14 +77,13 @@ export function HighImpactNews() {
               importance
             };
           })
-          // STRICT FILTER: Only show events that are today AND happen in the future
-          .filter(item => isToday(item.dateObj) && item.dateObj.getTime() > new Date().getTime())
-          .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
+          // REMOVED 'isToday' filter. Now just checks if time hasn't passed yet.
+          .filter((item: ParsedEvent) => item.dateObj.getTime() > new Date().getTime())
+          .sort((a: ParsedEvent, b: ParsedEvent) => a.dateObj.getTime() - b.dateObj.getTime());
 
         setEvents(parsed);
-      } catch (error) {
-        // If it fails, check your browser console (F12) to see the exact error
-        console.error("Failed to fetch news:", error);
+      } catch (error: any) {
+        setErrorMsg(error.message || "Failed to parse data");
       } finally {
         setIsLoading(false);
       }
@@ -100,7 +100,7 @@ export function HighImpactNews() {
       <div className="mb-4 flex items-start justify-between">
         <div className="flex flex-col">
           <span className="text-[16px] font-semibold tracking-tight text-white">High Impact News</span>
-          <span className="text-[13px] font-medium text-neutral-500">Today's upcoming high impact news</span>
+          <span className="text-[13px] font-medium text-neutral-500">Upcoming USD events</span>
         </div>
         
         <DropdownMenu.Root>
@@ -131,23 +131,35 @@ export function HighImpactNews() {
 
       <div className="flex flex-col gap-2">
         {isLoading ? (
-          // SKELETON LOADER
           <>
             <div className="h-[52px] w-full animate-pulse rounded-xl border border-neutral-800/40 bg-[#0A0A0A]"></div>
             <div className="h-[52px] w-full animate-pulse rounded-xl border border-neutral-800/40 bg-[#0A0A0A]"></div>
           </>
+        ) : errorMsg ? (
+          <div className="flex min-h-[120px] flex-col items-center justify-center px-4 text-center">
+            <span className="text-[13px] font-bold text-red-500">Error Loading News</span>
+            <span className="text-[12px] font-medium text-neutral-600 mt-1">{errorMsg}</span>
+          </div>
         ) : filteredEvents.length === 0 ? (
           <div className="flex min-h-[120px] items-center justify-center px-4 text-center">
-            <span className="text-[16px] font-medium text-neutral-600">
+            <span className="text-[13px] font-medium text-neutral-600">
               There is no high impact news today, enjoy your trading.
             </span>
           </div>
         ) : (
-          filteredEvents.map(event => {
+          // Slicing to 4 just to keep the card from getting too long since we removed the "today" limit
+          filteredEvents.slice(0, 4).map(event => {
             const minsUntil = differenceInMinutes(event.dateObj, now);
             const hours = Math.floor(minsUntil / 60);
             const mins = minsUntil % 60;
-            const timeString = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+            
+            // If it's more than a day out, show days instead of just hours
+            const days = Math.floor(hours / 24);
+            const remHours = hours % 24;
+            let timeString = '';
+            if (days > 0) timeString = `${days}d ${remHours}h`;
+            else if (hours > 0) timeString = `${hours}h ${mins}m`;
+            else timeString = `${mins}m`;
 
             return (
               <div key={event.id} className="flex items-center justify-between rounded-xl border border-neutral-800/60 bg-[#090909] p-3 px-4">
@@ -159,7 +171,7 @@ export function HighImpactNews() {
                 </div>
                 
                 <div className="flex items-center gap-4">
-                  <span className="text-[13px] font-medium text-white">{timeString}</span>
+                  <span className="text-[13px] font-medium text-white whitespace-nowrap">{timeString}</span>
                   <div className="flex items-center gap-2 rounded-full bg-[#141414] px-2.5 py-1">
                     <span className="text-[11px] font-semibold text-neutral-400 mr-1">{format(event.dateObj, 'HH:mm')}</span>
                     <div className="flex items-center gap-0.5">
