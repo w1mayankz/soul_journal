@@ -5,16 +5,21 @@ import { usePathname } from 'next/navigation';
 import { Menu01Icon } from 'hugeicons-react';
 import { AppSidebar } from './app-sidebar';
 
-export function TopNavbar({ children }: { children?: React.ReactNode }) {
+export function TopNavbar({ children, title }: { children?: React.ReactNode, title?: string }) {
   const pathname = usePathname();
   
-  let pageTitle = 'Dashboard';
-  if (pathname === '/trades') pageTitle = 'Trades';
-  else if (pathname === '/calendar') pageTitle = 'Calendar';
-  else if (pathname === '/analytics') pageTitle = 'Analytics';
-  else if (pathname === '/strategies') pageTitle = 'Strategies';
-  else if (pathname === '/accounts') pageTitle = 'Accounts';
-  else if (pathname === '/notebook') pageTitle = 'Notebook';
+  // Uses the passed title (e.g., "Notebook > Daily Journal") if it exists, 
+  // otherwise defaults back to reading the URL pathname.
+  let pageTitle = title || 'Dashboard';
+  
+  if (!title) {
+    if (pathname === '/trades') pageTitle = 'Trades';
+    else if (pathname === '/calendar') pageTitle = 'Calendar';
+    else if (pathname === '/analytics') pageTitle = 'Analytics';
+    else if (pathname === '/strategies') pageTitle = 'Strategies';
+    else if (pathname === '/accounts') pageTitle = 'Accounts';
+    else if (pathname === '/notebook') pageTitle = 'Notebook';
+  }
 
   return (
     <>
