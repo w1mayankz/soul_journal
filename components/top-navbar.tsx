@@ -14,6 +14,7 @@ export function TopNavbar({ children }: { children?: React.ReactNode }) {
   else if (pathname === '/analytics') pageTitle = 'Analytics';
   else if (pathname === '/strategies') pageTitle = 'Strategies';
   else if (pathname === '/accounts') pageTitle = 'Accounts';
+  else if (pathname === '/notebook') pageTitle = 'Notebook';
 
   return (
     <>
