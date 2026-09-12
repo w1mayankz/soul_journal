@@ -9,7 +9,7 @@ export type Trade = {
   symbol: string; 
   side: string; 
   pnl: number;
-  strategy?: string; // ADDED: So trades can be linked to a strategy
+  strategy?: string;
 };
 
 export type Account = {
@@ -42,17 +42,16 @@ const TradesContext = createContext<{
   activeAccountId: number | null;
   setActiveAccount: (id: number) => void;
   
-  // STRATEGY STATE & FUNCTIONS ADDED HERE
   strategies: Strategy[];
   addStrategy: (strategy: Strategy) => void;
+  updateStrategy: (strategy: Strategy) => void;
+  deleteStrategy: (id: number) => void;
 } | null>(null);
 
 export function TradesProvider({ children }: { children: ReactNode }) {
   const [trades, setTrades] = useState<Trade[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [activeAccountId, setActiveAccountId] = useState<number | null>(null);
-  
-  // ADDED STRATEGY STATE
   const [strategies, setStrategies] = useState<Strategy[]>([]);
 
   const addTrade = (trade: Trade) => {
@@ -96,9 +95,18 @@ export function TradesProvider({ children }: { children: ReactNode }) {
     ));
   };
 
-  // ADDED STRATEGY FUNCTION
   const addStrategy = (strategy: Strategy) => {
     setStrategies(prev => [...prev, strategy]);
+  };
+
+  // ADDED: Update Strategy
+  const updateStrategy = (updatedStrategy: Strategy) => {
+    setStrategies(prev => prev.map(s => s.id === updatedStrategy.id ? updatedStrategy : s));
+  };
+
+  // ADDED: Delete Strategy
+  const deleteStrategy = (id: number) => {
+    setStrategies(prev => prev.filter(s => s.id !== id));
   };
 
   return (
@@ -113,10 +121,10 @@ export function TradesProvider({ children }: { children: ReactNode }) {
       toggleStarAccount, 
       activeAccountId, 
       setActiveAccount: setActiveAccountId,
-      
-      // PROVIDED TO THE APP HERE
       strategies,
-      addStrategy
+      addStrategy,
+      updateStrategy,
+      deleteStrategy
     }}>
       {children}
     </TradesContext.Provider>
