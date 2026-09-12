@@ -14,24 +14,25 @@ import {
   ArrowRight01Icon,
   PlusSignIcon,
   Cancel01Icon,
-  // Selectable Icons
+  // Selectable Icons (Guaranteed Free/Old Version)
   Folder01Icon,
   StarIcon,
-  LockIcon,
-  HeartIcon,
   Book01Icon,
   Bookmark01Icon,
   Flag01Icon,
   File01Icon,
   Calendar01Icon,
-  UserIcon
+  UserIcon,
+  Home01Icon,
+  Image01Icon
 } from 'hugeicons-react';
 
 // --- CONSTANTS ---
 
 const ICONS = [
-  'Folder01Icon', 'StarIcon', 'LockIcon', 'HeartIcon', 'Book01Icon', 
-  'Bookmark01Icon', 'Flag01Icon', 'File01Icon', 'Calendar01Icon', 'UserIcon'
+  'Folder01Icon', 'StarIcon', 'Book01Icon', 'Bookmark01Icon', 
+  'Flag01Icon', 'File01Icon', 'Calendar01Icon', 'UserIcon', 
+  'Home01Icon', 'Image01Icon'
 ];
 
 const COLORS = [
@@ -63,8 +64,9 @@ const DEFAULT_SYSTEM_FOLDERS: Folder[] = [
 // Dynamic icon renderer
 const renderIcon = (iconName: string, color: string, size = 22) => {
   const IconMap: Record<string, React.ElementType> = {
-    Folder01Icon, StarIcon, LockIcon, HeartIcon, Book01Icon, 
-    Bookmark01Icon, Flag01Icon, File01Icon, Calendar01Icon, UserIcon
+    Folder01Icon, StarIcon, Book01Icon, Bookmark01Icon, 
+    Flag01Icon, File01Icon, Calendar01Icon, UserIcon, 
+    Home01Icon, Image01Icon
   };
   const IconComp = IconMap[iconName] || Folder01Icon;
   return <IconComp size={size} color={color} />;
