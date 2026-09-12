@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { format } from 'date-fns';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { TopNavbar } from '../../components/top-navbar';
@@ -11,7 +13,11 @@ import {
   DollarSquareIcon, 
   PercentIcon, 
   ViewOffSlashIcon,
-  Menu05Icon
+  Menu05Icon,
+  ArrowLeft01Icon,
+  PencilEdit01Icon,
+  CloudUploadIcon,
+  ArrowRight01Icon
 } from 'hugeicons-react';
 import { useTrades, Strategy } from '../../context/trades-context';
 
@@ -21,7 +27,7 @@ type Confluence = {
 };
 
 export default function StrategiesPage() {
-  const { trades, strategies, addStrategy } = useTrades();
+  const { trades, strategies, addStrategy, deleteStrategy } = useTrades();
   
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState('');
@@ -29,7 +35,8 @@ export default function StrategiesPage() {
   const [confluences, setConfluences] = useState<Confluence[]>([]);
   const [displayView, setDisplayView] = useState('Money View');
 
-  // Modal States
+  // Modal & View States
+  const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(null);
   const [editingStrategy, setEditingStrategy] = useState<Strategy | null>(null);
   const [deletingStrategy, setDeletingStrategy] = useState<Strategy | null>(null);
 
@@ -64,6 +71,149 @@ export default function StrategiesPage() {
     setConfluences([]);
   };
 
+  const confirmDelete = () => {
+    if (deletingStrategy) {
+      deleteStrategy(deletingStrategy.id);
+      if (selectedStrategy?.id === deletingStrategy.id) {
+        setSelectedStrategy(null);
+      }
+    }
+    setDeletingStrategy(null);
+  };
+
+  // --- STRATEGY DETAILS VIEW ---
+  if (selectedStrategy) {
+    const strategyTrades = trades.filter(t => t.strategy === selectedStrategy.name);
+    // Slice the first 4 since addTrade prepends newest trades to the beginning
+    const recentTrades = strategyTrades.slice(0, 4);
+
+    return (
+      <div className="relative min-h-screen bg-black pb-24 font-sans text-white">
+        <TopNavbar>
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#141414] text-neutral-300">
+            <DollarSquareIcon size={22} />
+          </div>
+        </TopNavbar>
+
+        {/* SUBHEADER */}
+        <div className="mt-6 flex items-center justify-between px-4">
+          <div className="flex items-center gap-3">
+            <button onClick={() => setSelectedStrategy(null)} className="text-white outline-none">
+              <ArrowLeft01Icon size={24} />
+            </button>
+            <span className="text-[22px] font-semibold tracking-tight text-white">{selectedStrategy.name}</span>
+            <button onClick={() => setEditingStrategy(selectedStrategy)} className="text-white outline-none">
+              <PencilEdit01Icon size={20} />
+            </button>
+          </div>
+          <button onClick={() => setDeletingStrategy(selectedStrategy)} className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F44336] text-white outline-none">
+            <Delete02Icon size={18} />
+          </button>
+        </div>
+
+        {/* STRATEGY DETAILS CARD */}
+        <section className="mt-6 px-4">
+          <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] p-5">
+            <h3 className="text-[16px] font-medium text-white mb-4">Strategy Details</h3>
+            
+            <div className="flex flex-col gap-1 mb-6">
+              <span className="text-[13px] font-medium text-neutral-500">Description</span>
+              <span className="text-[15px] font-medium text-white mt-1">
+                {selectedStrategy.description ? selectedStrategy.description : "No Description"}
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <span className="text-[13px] font-medium text-neutral-500 mb-1">Confluences</span>
+              {selectedStrategy.confluences.length === 0 ? (
+                <span className="text-[14px] font-medium text-white">This strategy does not have any confluences</span>
+              ) : (
+                selectedStrategy.confluences.map(c => (
+                  <div key={c.id} className="flex items-center gap-3">
+                    <div className="h-[18px] w-[18px] rounded-full border-[1.5px] border-neutral-600" />
+                    <span className="text-[14px] font-medium text-white">{c.value}</span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* IDEAL ENTRY CARD */}
+        <section className="mt-4 px-4">
+          <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] p-4">
+            <h3 className="text-[16px] font-medium text-white mb-4">Ideal Entry</h3>
+            <div className="flex flex-col items-center justify-center rounded-xl border border-neutral-800/60 bg-[#0F0F0F] py-8 gap-2">
+              <CloudUploadIcon size={34} className="text-neutral-500 mb-1" />
+              <p className="text-[15px] font-medium text-white tracking-tight">Upload Screenshot</p>
+              <p className="text-[12px] font-medium text-neutral-500 text-center">Drop here, paste with Ctrl+V or click</p>
+            </div>
+          </div>
+        </section>
+
+        {/* RECENT TRADES FILTERED BY THIS STRATEGY */}
+        <section className="mt-4 px-4">
+          <div className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-col">
+                <span className="text-[16px] font-medium tracking-tight text-white">Recent Trades</span>
+                <span className="text-[14px] font-semibold text-neutral-500">Last 4 registered trades</span>
+              </div>
+              <Link 
+                href="/trades" 
+                className="flex items-center gap-1.5 rounded-lg bg-[#141414] px-3 py-1.5 text-[13px] font-medium text-white outline-none"
+              >
+                See all <ArrowRight01Icon size={14} />
+              </Link>
+            </div>
+
+            {recentTrades.length === 0 ? (
+              <div className="flex min-h-[120px] items-center justify-center">
+                <span className="text-[14px] text-center font-medium text-neutral-600 px-4">
+                  You don't have any trades yet. Register a trade to get started.
+                </span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3">
+                {recentTrades.map(trade => {
+                  const isWin = trade.pnl > 0;
+                  const isLoss = trade.pnl < 0;
+                  const pnlColor = isWin ? 'text-[#009C00]' : isLoss ? 'text-[#F44336]' : 'text-neutral-400';
+                  const pnlSymbol = isWin ? '▴' : isLoss ? '▾' : '';
+                  const sideSymbol = trade.side.toLowerCase() === 'buy' ? '↑' : '↓';
+                  const sideColor = trade.side.toLowerCase() === 'buy' ? 'text-[#009C00]' : 'text-[#F44336]';
+
+                  return (
+                    <div key={trade.id} className="flex flex-col rounded-xl border border-neutral-800/60 bg-[#0F0F0F] p-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[16px] font-medium text-white tracking-tight">{trade.symbol}</span>
+                        <span className={`text-[16px] font-medium tracking-tight ${pnlColor}`}>
+                          {pnlSymbol} ${Math.abs(trade.pnl).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2})}
+                        </span>
+                      </div>
+                      <div className="mt-3 flex items-center justify-between">
+                        <span className="text-[15px] font-medium text-white capitalize">
+                          {trade.side} <span className={sideColor}>{sideSymbol}</span>
+                        </span>
+                        <span className="text-[15px] font-semibold text-neutral-500">
+                          {format(new Date(trade.date), 'EEE dd/MM')}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </section>
+
+        <EditStrategyModal strategy={editingStrategy} onClose={() => setEditingStrategy(null)} />
+        <DeleteStrategyModal strategy={deletingStrategy} onClose={() => setDeletingStrategy(null)} onConfirm={confirmDelete} />
+      </div>
+    );
+  }
+
+  // --- MAIN STRATEGIES LIST VIEW ---
   return (
     <div className="relative min-h-screen bg-black pb-24 font-sans text-white">
       
@@ -77,13 +227,13 @@ export default function StrategiesPage() {
               align="end"
               className="z-50 min-w-[200px] overflow-hidden rounded-xl border border-neutral-800 bg-[#0A0A0A]/90 backdrop-blur-xl p-1 shadow-2xl text-white text-[15px] animate-in fade-in-80 zoom-in-95"
             >
-              <DropdownMenu.Item onClick={() => setDisplayView('Money View')} className="flex items-center justify-between rounded-lg px-3 py-2.5 outline-none cursor-pointer">
+              <DropdownMenu.Item onClick={() => setDisplayView('Money View')} className="flex items-center justify-between rounded-lg px-3 py-2.5 outline-none">
                 Money View <DollarSquareIcon size={18} className="text-neutral-400" />
               </DropdownMenu.Item>
-              <DropdownMenu.Item onClick={() => setDisplayView('Percentage View')} className="flex items-center justify-between rounded-lg px-3 py-2.5 outline-none cursor-pointer">
+              <DropdownMenu.Item onClick={() => setDisplayView('Percentage View')} className="flex items-center justify-between rounded-lg px-3 py-2.5 outline-none">
                 Percentage View <PercentIcon size={18} className="text-neutral-400" />
               </DropdownMenu.Item>
-              <DropdownMenu.Item onClick={() => setDisplayView('Hide P&L')} className="flex items-center justify-between rounded-lg px-3 py-2.5 outline-none cursor-pointer">
+              <DropdownMenu.Item onClick={() => setDisplayView('Hide P&L')} className="flex items-center justify-between rounded-lg px-3 py-2.5 outline-none">
                 Hide P&L <ViewOffSlashIcon size={18} className="text-neutral-400" />
               </DropdownMenu.Item>
             </DropdownMenu.Content>
@@ -92,7 +242,6 @@ export default function StrategiesPage() {
       </TopNavbar>
 
       <section className="mt-6 px-4 flex flex-col gap-4">
-        
         {(strategies || []).map((strategy) => {
           const strategyTrades = trades.filter(t => t.strategy === strategy.name);
           const totalTrades = strategyTrades.length;
@@ -112,7 +261,11 @@ export default function StrategiesPage() {
           const pnlSymbol = isWin ? '▴ ' : isLoss ? '▾ ' : '';
 
           return (
-            <div key={strategy.id} className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] p-4 shadow-sm">
+            <div 
+              key={strategy.id} 
+              onClick={() => setSelectedStrategy(strategy)}
+              className="flex flex-col rounded-2xl border border-neutral-800/60 bg-[#090909] p-4 shadow-sm"
+            >
               <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-3">
                   <span className="text-[17px] font-semibold tracking-tight text-white">{strategy.name}</span>
@@ -122,7 +275,10 @@ export default function StrategiesPage() {
                 </div>
                 
                 <DropdownMenu.Root>
-                  <DropdownMenu.Trigger className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#141414] text-neutral-400 outline-none">
+                  <DropdownMenu.Trigger 
+                    onClick={(e) => e.stopPropagation()} 
+                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#141414] text-neutral-400 outline-none"
+                  >
                     <Menu05Icon size={18} />
                   </DropdownMenu.Trigger>
                   <DropdownMenu.Portal>
@@ -131,14 +287,14 @@ export default function StrategiesPage() {
                       className="z-50 min-w-[180px] overflow-hidden rounded-xl border border-neutral-800 bg-[#0A0A0A]/95 backdrop-blur-xl py-1 shadow-2xl animate-in fade-in-80 zoom-in-95"
                     >
                       <DropdownMenu.Item 
-                        onClick={() => setEditingStrategy(strategy)}
+                        onClick={(e) => { e.stopPropagation(); setEditingStrategy(strategy); }}
                         className="flex items-center justify-between px-4 py-3 text-[14px] font-medium text-white outline-none bg-[#1A1A1A]"
                       >
                         Edit strategy
                       </DropdownMenu.Item>
                       <DropdownMenu.Separator className="h-px w-full bg-neutral-800/60 my-1" />
                       <DropdownMenu.Item 
-                        onClick={() => setDeletingStrategy(strategy)}
+                        onClick={(e) => { e.stopPropagation(); setDeletingStrategy(strategy); }}
                         className="flex items-center justify-between px-4 py-3 text-[14px] font-medium text-[#F44336] outline-none"
                       >
                         Delete strategy
@@ -171,7 +327,6 @@ export default function StrategiesPage() {
         </button>
       </section>
 
-      {/* CREATE STRATEGY MODAL */}
       <Dialog.Root 
         open={isOpen} 
         onOpenChange={(open) => {
@@ -272,18 +427,8 @@ export default function StrategiesPage() {
         </Dialog.Portal>
       </Dialog.Root>
 
-      {/* EDIT STRATEGY MODAL */}
-      <EditStrategyModal 
-        strategy={editingStrategy} 
-        onClose={() => setEditingStrategy(null)} 
-      />
-
-      {/* DELETE STRATEGY POPUP */}
-      <DeleteStrategyModal 
-        strategy={deletingStrategy} 
-        onClose={() => setDeletingStrategy(null)} 
-      />
-
+      <EditStrategyModal strategy={editingStrategy} onClose={() => setEditingStrategy(null)} />
+      <DeleteStrategyModal strategy={deletingStrategy} onClose={() => setDeletingStrategy(null)} onConfirm={confirmDelete} />
     </div>
   );
 }
@@ -417,16 +562,7 @@ function EditStrategyModal({ strategy, onClose }: { strategy: Strategy | null, o
   );
 }
 
-function DeleteStrategyModal({ strategy, onClose }: { strategy: Strategy | null, onClose: () => void }) {
-  const { deleteStrategy } = useTrades();
-
-  const handleDelete = () => {
-    if (strategy) {
-      deleteStrategy(strategy.id);
-    }
-    onClose();
-  };
-
+function DeleteStrategyModal({ strategy, onClose, onConfirm }: { strategy: Strategy | null, onClose: () => void, onConfirm: () => void }) {
   return (
     <Dialog.Root open={!!strategy} onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
@@ -443,7 +579,7 @@ function DeleteStrategyModal({ strategy, onClose }: { strategy: Strategy | null,
               Cancel
             </Dialog.Close>
             <button 
-              onClick={handleDelete} 
+              onClick={onConfirm} 
               className="rounded-xl bg-[#F44336] px-5 py-2.5 text-[14px] font-medium text-white outline-none"
             >
               Delete
