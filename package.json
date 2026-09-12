@@ -12,6 +12,7 @@
     "react": "latest",
     "react-dom": "latest",
     "hugeicons-react": "latest",
+    "lucide-react": "latest",
     "clsx": "latest",
     "tailwind-merge": "latest",
     "@radix-ui/react-dropdown-menu": "latest",
