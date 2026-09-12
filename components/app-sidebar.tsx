@@ -8,6 +8,7 @@ import {
   CheckListIcon, 
   Analytics01Icon, 
   BorderFullIcon,
+  PencilEdit02Icon,
   ArrowLeftDoubleIcon, 
   UserMultipleIcon,
   ArrowDown01Icon,
@@ -81,6 +82,10 @@ export function AppSidebar() {
             </Link>
             <Link href="/strategies" className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-colors ${pathname === '/strategies' ? 'bg-[#141414] text-[15px] text-white' : 'text-[16px] text-white hover:bg-[#141414] hover:text-white'}`}>
               <BorderFullIcon size={18} className={pathname === '/strategies' ? 'text-neutral-300' : ''} /> Strategies
+            </Link>
+            {/* NEW NOTEBOOK LINK */}
+            <Link href="/notebook" className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-colors ${pathname === '/notebook' ? 'bg-[#141414] text-[15px] text-white' : 'text-[16px] text-white hover:bg-[#141414] hover:text-white'}`}>
+              <PencilEdit02Icon size={18} className={pathname === '/notebook' ? 'text-neutral-300' : ''} /> Notebook
             </Link>
           </nav>
         </div>
