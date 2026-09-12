@@ -8,7 +8,8 @@ export type Trade = {
   date: string; 
   symbol: string; 
   side: string; 
-  pnl: number 
+  pnl: number;
+  strategy?: string; // ADDED: So trades can be linked to a strategy
 };
 
 export type Account = {
@@ -19,7 +20,14 @@ export type Account = {
   accountType: string;
   breakeven: string;
   isStarred: boolean;
-  isArchived?: boolean; // New flag for archiving
+  isArchived?: boolean;
+};
+
+export type Strategy = {
+  id: number;
+  name: string;
+  description: string;
+  confluences: { id: number; value: string }[];
 };
 
 const TradesContext = createContext<{
@@ -33,12 +41,19 @@ const TradesContext = createContext<{
   toggleStarAccount: (id: number) => void;
   activeAccountId: number | null;
   setActiveAccount: (id: number) => void;
+  
+  // STRATEGY STATE & FUNCTIONS ADDED HERE
+  strategies: Strategy[];
+  addStrategy: (strategy: Strategy) => void;
 } | null>(null);
 
 export function TradesProvider({ children }: { children: ReactNode }) {
   const [trades, setTrades] = useState<Trade[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [activeAccountId, setActiveAccountId] = useState<number | null>(null);
+  
+  // ADDED STRATEGY STATE
+  const [strategies, setStrategies] = useState<Strategy[]>([]);
 
   const addTrade = (trade: Trade) => {
     if (!activeAccountId) return; 
@@ -81,6 +96,11 @@ export function TradesProvider({ children }: { children: ReactNode }) {
     ));
   };
 
+  // ADDED STRATEGY FUNCTION
+  const addStrategy = (strategy: Strategy) => {
+    setStrategies(prev => [...prev, strategy]);
+  };
+
   return (
     <TradesContext.Provider value={{ 
       trades, 
@@ -92,7 +112,11 @@ export function TradesProvider({ children }: { children: ReactNode }) {
       toggleArchiveAccount,
       toggleStarAccount, 
       activeAccountId, 
-      setActiveAccount: setActiveAccountId 
+      setActiveAccount: setActiveAccountId,
+      
+      // PROVIDED TO THE APP HERE
+      strategies,
+      addStrategy
     }}>
       {children}
     </TradesContext.Provider>
