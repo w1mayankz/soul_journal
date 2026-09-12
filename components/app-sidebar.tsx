@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
-  GridIcon, 
-  Calendar01Icon, 
-  Task01Icon, 
-  Chart01Icon, 
-  Briefcase01Icon, 
+  DashboardSquare01Icon,
+  Calendar05Icon, 
+  ListChecksIcon, 
+  Analytics01Icon, 
+  BriefcaseBusinessIcon,
   ArrowLeftDoubleIcon, 
   UserMultipleIcon,
   ArrowDown01Icon,
@@ -68,19 +68,19 @@ export function AppSidebar() {
           <p className="mb-2 px-2 text-[12px] font-semibold text-neutral-500">Journaling</p>
           <nav className="flex flex-col gap-1">
             <Link href="/" className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-colors ${pathname === '/' ? 'bg-[#141414] text-[15px] text-white' : 'text-[16px] text-white hover:bg-[#141414]'}`}>
-              <GridIcon size={18} className={pathname === '/' ? 'text-neutral-300' : ''} /> Dashboard
+              <DashboardSquare01Icon size={18} className={pathname === '/' ? 'text-neutral-300' : ''} /> Dashboard
             </Link>
             <Link href="/calendar" className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-colors ${pathname === '/calendar' ? 'bg-[#141414] text-[15px] text-white' : 'text-[16px] text-white hover:bg-[#141414] hover:text-white'}`}>
-              <Calendar01Icon size={18} className={pathname === '/calendar' ? 'text-neutral-300' : ''} /> Calendar
+              <Calendar05Icon size={18} className={pathname === '/calendar' ? 'text-neutral-300' : ''} /> Calendar
             </Link>
             <Link href="/trades" className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-colors ${pathname === '/trades' ? 'bg-[#141414] text-[15px] text-white' : 'text-[16px] text-white hover:bg-[#141414]'}`}>
-              <Task01Icon size={18} className={pathname === '/trades' ? 'text-neutral-300' : ''} /> Trades
+              <ListChecksIcon size={18} className={pathname === '/trades' ? 'text-neutral-300' : ''} /> Trades
             </Link>
             <Link href="/analytics" className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-colors ${pathname === '/analytics' ? 'bg-[#141414] text-[15px] text-white' : 'text-[16px] text-white hover:bg-[#141414] hover:text-white'}`}>
-              <Chart01Icon size={18} className={pathname === '/analytics' ? 'text-neutral-300' : ''} /> Analytics
+              <Analytics01Icon size={18} className={pathname === '/analytics' ? 'text-neutral-300' : ''} /> Analytics
             </Link>
             <Link href="/strategies" className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium transition-colors ${pathname === '/strategies' ? 'bg-[#141414] text-[15px] text-white' : 'text-[16px] text-white hover:bg-[#141414] hover:text-white'}`}>
-              <Briefcase01Icon size={18} className={pathname === '/strategies' ? 'text-neutral-300' : ''} /> Strategies
+              <BriefcaseBusinessIcon size={18} className={pathname === '/strategies' ? 'text-neutral-300' : ''} /> Strategies
             </Link>
           </nav>
         </div>
