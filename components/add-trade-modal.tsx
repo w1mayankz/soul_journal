@@ -18,10 +18,10 @@ import {
 import { useTrades } from '../context/trades-context';
 
 const SYMBOLS = ["NQ1!", "MNQ1!", "ES1!", "MES1!", "GC1!", "MGC1!", "YM1!", "MYM1!", "NAS100", "US30"];
-const STRATEGIES = ["None", "Silver Bullet", "London Killzone", "New York Reversal", "Opening Gap"];
 
 export function AddTradeModal() {
-  const { addTrade, activeAccountId } = useTrades();
+  // ADDED 'strategies' to the destructured context
+  const { addTrade, activeAccountId, strategies } = useTrades();
   const [isOpen, setIsOpen] = useState(false);
   
   // Basic Form State
@@ -156,7 +156,9 @@ export function AddTradeModal() {
       date: `${format(date, 'yyyy/MM/dd')} ${time}`,
       symbol,
       side,
-      pnl: parsedPnl
+      pnl: parsedPnl,
+      // Pass the selected strategy along with the trade (ignore if "None")
+      strategy: strategy !== 'None' ? strategy : undefined
     });
     
     setIsOpen(false);
@@ -482,7 +484,7 @@ export function AddTradeModal() {
               </div>
             </div>
 
-            {/* STRATEGY DROPDOWN */}
+            {/* DYNAMIC REAL STRATEGY DROPDOWN */}
             <div className="flex flex-col gap-2 mt-2">
               <label className="text-[14px] font-semibold text-white">Strategy</label>
               <Popover.Root open={strategyOpen} onOpenChange={setStrategyOpen}>
@@ -491,13 +493,19 @@ export function AddTradeModal() {
                   <ArrowDown01Icon size={18} className="text-neutral-400" />
                 </Popover.Trigger>
                 <Popover.Content align="start" className="z-[80] w-[calc(95vw-40px)] max-w-[440px] rounded-xl border border-neutral-800 bg-[#0A0A0A] p-1 shadow-2xl animate-in fade-in-80 zoom-in-95">
-                  {STRATEGIES.map(s => (
+                  <button 
+                    onClick={() => { setStrategy('None'); setStrategyOpen(false); }}
+                    className="w-full rounded-lg px-3 py-2.5 text-left text-[14px] font-medium text-neutral-300 hover:bg-[#1A1A1A] hover:text-white outline-none"
+                  >
+                    None
+                  </button>
+                  {strategies.map(s => (
                     <button 
-                      key={s} 
-                      onClick={() => { setStrategy(s); setStrategyOpen(false); }}
+                      key={s.id} 
+                      onClick={() => { setStrategy(s.name); setStrategyOpen(false); }}
                       className="w-full rounded-lg px-3 py-2.5 text-left text-[14px] font-medium text-neutral-300 hover:bg-[#1A1A1A] hover:text-white outline-none"
                     >
-                      {s}
+                      {s.name}
                     </button>
                   ))}
                 </Popover.Content>
