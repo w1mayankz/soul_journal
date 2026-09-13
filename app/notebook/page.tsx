@@ -356,16 +356,16 @@ export default function NotebookPage() {
           </section>
         )}
         
-        {/* ==========================================
+                {/* ==========================================
             NOTE EDITOR VIEW
             ========================================== */}
         {activeView === 'editor' && (
-          <section className={`px-4 pt-4 flex flex-col flex-1 ${slideAnim}`}>
+          <section className={`px-4 pt-4 flex flex-col fixed inset-0 top-14 bg-black z-30 ${slideAnim}`}>
             
-            {/* EDITOR HEADER (BUTTONS) */}
-            <div className="flex items-center justify-between mb-4">
+            {/* EDITOR HEADER */}
+            <div className="flex items-center justify-between mb-2 shrink-0">
               <div className="flex items-center gap-3">
-                <button onClick={handleBackFromEditor} className="text-white outline-none">
+                <button onClick={handleSaveEditor} className="text-white outline-none">
                   <ArrowLeft01Icon size={24} />
                 </button>
                 <button className="flex items-center gap-1 rounded-lg bg-[#141414] px-3 py-1.5 text-[13px] font-medium text-white outline-none">
@@ -382,19 +382,8 @@ export default function NotebookPage() {
               </div>
             </div>
 
-            {/* INLINE TOOLBAR (GREY BACKGROUND) */}
-            <div className="flex items-center justify-between rounded-xl bg-[#141414] px-4 py-3 mb-4">
-              <TableOfContents size={20} className="text-neutral-400" />
-              <CaseSensitive size={20} className="text-neutral-400" />
-              <Type size={20} className="text-neutral-400" />
-              <LinkIcon size={20} className="text-neutral-400" />
-              <button onPointerDown={(e) => { e.preventDefault(); (document.activeElement as HTMLElement)?.blur(); }} className="outline-none">
-                <ArrowDownFromLine size={20} className="text-neutral-400" />
-              </button>
-            </div>
-
-            {/* STICKY TITLE & LAST UPDATED AREA */}
-            <div className="sticky top-14 z-40 bg-black pt-2 pb-2 flex items-start justify-between gap-3 border-b border-transparent">
+            {/* STATIC TITLE & SAVE/DATE */}
+            <div className="pt-2 pb-2 flex items-start justify-between gap-3 border-b border-transparent shrink-0">
               <textarea
                 value={noteTitle}
                 onChange={(e) => { setNoteTitle(e.target.value); handleInputResize(e); }}
@@ -405,7 +394,7 @@ export default function NotebookPage() {
                   }
                 }}
                 onFocus={() => setIsKeyboardVisible(true)}
-                onBlur={() => { setIsKeyboardVisible(false); handleAutoSave(); }}
+                onBlur={() => setIsKeyboardVisible(false)}
                 placeholder="Heading"
                 className="flex-1 resize-none overflow-hidden bg-transparent text-[28px] font-bold text-white outline-none placeholder:text-neutral-600 self-center"
                 rows={1}
@@ -413,31 +402,38 @@ export default function NotebookPage() {
               />
               
               <div className="flex shrink-0 items-center justify-end pt-2">
-                {!isKeyboardVisible && (
-                  <span className="text-[11px] font-medium text-neutral-500 text-right leading-tight max-w-[100px]">
+                {isKeyboardVisible ? (
+                  <button 
+                    onPointerDown={(e) => { e.preventDefault(); handleSaveEditor(); }} 
+                    className="rounded-lg bg-white px-4 py-1.5 text-[13px] font-bold text-black outline-none"
+                  >
+                    Save
+                  </button>
+                ) : (
+                  <span className="text-[11px] font-medium text-neutral-500 text-right leading-tight max-w-[110px]">
                     Last Updated:<br/>
                     {activeNote?.updatedAt || activeNote?.createdAt 
-                      ? format(new Date(activeNote.updatedAt || activeNote.createdAt), 'd MMM, HH:mm') 
-                      : format(new Date(), 'd MMM, HH:mm')}
+                      ? format(new Date(activeNote.updatedAt || activeNote.createdAt), 'd MMM yyyy, HH:mm') 
+                      : format(new Date(), 'd MMM yyyy, HH:mm')}
                   </span>
                 )}
               </div>
             </div>
 
-            {/* EDITOR TYPING AREA (BACK TO NORMAL) */}
-            <div className="flex flex-col flex-1 pb-16">
-              <textarea
-                ref={bodyRef}
-                value={noteBody}
-                onChange={(e) => { setNoteBody(e.target.value); handleInputResize(e); }}
-                onFocus={() => setIsKeyboardVisible(true)}
-                onBlur={() => { setIsKeyboardVisible(false); handleAutoSave(); }}
-                placeholder="Type something..."
-                className="w-full flex-1 resize-none bg-transparent text-[16px] leading-relaxed text-white outline-none placeholder:text-neutral-600 mt-2 min-h-[400px]"
-              />
-            </div>
+            {/* EDITOR TYPING AREA (Handles its own scrolling now) */}
+            <textarea
+              ref={bodyRef}
+              value={noteBody}
+              onChange={(e) => setNoteBody(e.target.value)}
+              onFocus={() => setIsKeyboardVisible(true)}
+              onBlur={() => setIsKeyboardVisible(false)}
+              placeholder="Type something..."
+              className={`w-full flex-1 resize-none bg-transparent text-[16px] leading-relaxed text-white outline-none placeholder:text-neutral-600 mt-2 ${isKeyboardVisible ? 'pb-16' : 'pb-4'}`}
+            />
+            
           </section>
         )}
+
 
       {/* --- MODALS --- */}
       {/* FIX: Correct mapped handler to context's updateFolder */}
