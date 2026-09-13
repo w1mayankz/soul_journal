@@ -15,7 +15,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${interTight.variable} dark`}>
+   <html lang="en" className={`${interTight.variable} dark`}>
+      <head>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+      </head>
       <body className="bg-black text-white font-sans antialiased selection:bg-green-500/30">
         <TradesProvider>
           <main className="min-h-screen w-full max-w-full overflow-x-hidden">
@@ -24,6 +28,19 @@ export default function RootLayout({
           {/* Mounts the interactive modal and global FAB */}
           <AddTradeModal />
         </TradesProvider>
+
+        {/* PWA Service Worker Registration */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js');
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );
