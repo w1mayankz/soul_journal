@@ -8,8 +8,6 @@ import { AppSidebar } from './app-sidebar';
 export function TopNavbar({ children, title }: { children?: React.ReactNode, title?: string }) {
   const pathname = usePathname();
   
-  // Uses the passed title (e.g., "Notebook > Daily Journal") if it exists, 
-  // otherwise defaults back to reading the URL pathname.
   let pageTitle = title || 'Dashboard';
   
   if (!title) {
@@ -24,10 +22,12 @@ export function TopNavbar({ children, title }: { children?: React.ReactNode, tit
   return (
     <>
     <header className="fixed left-0 right-0 top-0 z-50 flex h-14 items-center justify-between bg-black px-4 pt-2">
-      <div className="flex items-center gap-1">
+      
+      {/* Left Side (Menu + Breadcrumb) - flex-1 and min-w-0 forces truncation to work */}
+      <div className="flex flex-1 min-w-0 items-center gap-2 pr-4">
         <Dialog.Root>
           <Dialog.Trigger asChild>
-            <button className="flex h-12 w-12 items-center justify-center text-neutral-300 hover:text-white transition-colors active:scale-95 outline-none">
+            <button className="flex h-12 w-12 shrink-0 items-center justify-center text-neutral-300 outline-none">
               <Menu01Icon size={24} />
             </button>
           </Dialog.Trigger>
@@ -38,11 +38,13 @@ export function TopNavbar({ children, title }: { children?: React.ReactNode, tit
             </Dialog.Content>
           </Dialog.Portal>
         </Dialog.Root>
-        <span className="text-[15px] font-medium tracking-tight">{pageTitle}</span>
+        
+        {/* Truncate ensures long text gets ... */}
+        <span className="text-[15px] font-medium tracking-tight truncate w-full">{pageTitle}</span>
       </div>
       
-      {/* Injects page-specific buttons (dropdowns, selectors) here */}
-      <div className="flex items-center gap-3 pr-1">
+      {/* Right Side Buttons */}
+      <div className="flex shrink-0 items-center gap-3 pr-1">
         {children}
       </div>
     </header>
