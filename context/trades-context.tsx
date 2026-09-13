@@ -30,7 +30,6 @@ export type Strategy = {
   confluences: { id: number; value: string }[];
 };
 
-// NOTEBOOK TYPES
 export type Folder = {
   id: string;
   name: string;
@@ -64,7 +63,6 @@ const TradesContext = createContext<{
   updateStrategy: (strategy: Strategy) => void;
   deleteStrategy: (id: number) => void;
 
-  // NOTEBOOK STATE
   folders: Folder[];
   addFolder: (folder: Folder) => void;
   updateFolder: (folder: Folder) => void;
@@ -87,7 +85,6 @@ export function TradesProvider({ children }: { children: ReactNode }) {
   const [activeAccountId, setActiveAccountId] = useState<number | null>(null);
   const [strategies, setStrategies] = useState<Strategy[]>([]);
   
-  // NOTEBOOK STATE
   const [folders, setFolders] = useState<Folder[]>(DEFAULT_SYSTEM_FOLDERS);
   const [notes, setNotes] = useState<Note[]>([]);
 
@@ -97,9 +94,7 @@ export function TradesProvider({ children }: { children: ReactNode }) {
     setTrades(prev => [tradeWithAccount, ...prev]);
 
     setAccounts(prev => prev.map(acc => 
-      acc.id === activeAccountId 
-        ? { ...acc, currentBalance: acc.currentBalance + trade.pnl } 
-        : acc
+      acc.id === activeAccountId ? { ...acc, currentBalance: acc.currentBalance + trade.pnl } : acc
     ));
   };
 
@@ -125,7 +120,6 @@ export function TradesProvider({ children }: { children: ReactNode }) {
   const updateStrategy = (updatedStrategy: Strategy) => setStrategies(prev => prev.map(s => s.id === updatedStrategy.id ? updatedStrategy : s));
   const deleteStrategy = (id: number) => setStrategies(prev => prev.filter(s => s.id !== id));
 
-  // NOTEBOOK FUNCTIONS
   const addFolder = (folder: Folder) => setFolders(prev => [...prev, folder]);
   const updateFolder = (updated: Folder) => setFolders(prev => prev.map(f => f.id === updated.id ? updated : f));
   const deleteFolder = (id: string) => setFolders(prev => prev.filter(f => f.id !== id));
@@ -137,7 +131,8 @@ export function TradesProvider({ children }: { children: ReactNode }) {
   return (
     <TradesContext.Provider value={{ 
       trades, addTrade, accounts, addAccount, updateAccount, deleteAccount,
-      toggleArchiveAccount, toggleStarAccount, activeAccountId, setActiveAccount,
+      toggleArchiveAccount, toggleStarAccount, activeAccountId, 
+      setActiveAccount: setActiveAccountId, // FIX: Mapped correctly
       strategies, addStrategy, updateStrategy, deleteStrategy,
       folders, addFolder, updateFolder, deleteFolder,
       notes, addNote, updateNote, deleteNote
