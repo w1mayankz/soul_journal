@@ -407,22 +407,15 @@ export default function NotebookPage() {
               />
               
               <div className="flex shrink-0 items-center justify-end pt-2">
-                {isKeyboardVisible ? (
-                  <button 
-                    onPointerDown={(e) => { e.preventDefault(); handleSaveEditor(); }} 
-                    className="rounded-lg bg-white px-4 py-1.5 text-[13px] font-bold text-black outline-none"
-                  >
-                    Save
-                  </button>
-                ) : (
-                  <span className="text-[11px] font-medium text-neutral-500 text-right leading-tight max-w-[110px]">
-                    Last Updated:<br/>
-                    {activeNote?.updatedAt || activeNote?.createdAt 
-                      ? format(new Date(activeNote.updatedAt || activeNote.createdAt), 'd MMM yyyy, HH:mm') 
-                      : format(new Date(), 'd MMM yyyy, HH:mm')}
-                  </span>
-                )}
-              </div>
+                {!isKeyboardVisible && (
+                  <span className="text-[11px] font-medium text-neutral-500 text-right leading-tight max-w-[110px] animate-in fade-in duration-200">
+                     Last Updated:<br/>
+                     {activeNote?.updatedAt || activeNote?.createdAt 
+                     ? format(new Date(activeNote.updatedAt || activeNote.createdAt), 'd MMM yyyy, HH:mm') 
+                     : format(new Date(), 'd MMM yyyy, HH:mm')}
+                 </span>
+                 )}
+             </div>
             </div>
 
             {/* EDITOR TYPING AREA (Handles its own scrolling now) */}
