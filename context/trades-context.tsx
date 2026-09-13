@@ -44,6 +44,7 @@ export type Note = {
   title: string;
   body: string;
   createdAt: string;
+  updatedAt?: string;
 };
 
 const TradesContext = createContext<{
@@ -75,8 +76,8 @@ const TradesContext = createContext<{
 } | null>(null);
 
 const DEFAULT_SYSTEM_FOLDERS: Folder[] = [
-  { id: 'all-notes', name: 'All Notes', icon: 'Folder01Icon', color: '#A3A3A3', isSystem: true },
-  { id: 'daily-journal', name: 'Daily Journal', icon: 'Folder01Icon', color: '#A3A3A3', isSystem: true }
+  { id: 'all-notes', name: 'All Notes', icon: 'Folder01Icon', color: '#FFFFFF', isSystem: true },
+  { id: 'daily-journal', name: 'Daily Journal', icon: 'Folder01Icon', color: '#FFFFFF', isSystem: true }
 ];
 
 export function TradesProvider({ children }: { children: ReactNode }) {
@@ -124,15 +125,15 @@ export function TradesProvider({ children }: { children: ReactNode }) {
   const updateFolder = (updated: Folder) => setFolders(prev => prev.map(f => f.id === updated.id ? updated : f));
   const deleteFolder = (id: string) => setFolders(prev => prev.filter(f => f.id !== id));
 
-  const addNote = (note: Note) => setNotes(prev => [...prev, note]);
-  const updateNote = (updated: Note) => setNotes(prev => prev.map(n => n.id === updated.id ? updated : n));
+  const addNote = (note: Note) => setNotes(prev => [...prev, { ...note, updatedAt: new Date().toISOString() }]);
+  const updateNote = (updated: Note) => setNotes(prev => prev.map(n => n.id === updated.id ? { ...updated, updatedAt: new Date().toISOString() } : n));
   const deleteNote = (id: string) => setNotes(prev => prev.filter(n => n.id !== id));
 
   return (
     <TradesContext.Provider value={{ 
       trades, addTrade, accounts, addAccount, updateAccount, deleteAccount,
       toggleArchiveAccount, toggleStarAccount, activeAccountId, 
-      setActiveAccount: setActiveAccountId, // FIX: Mapped correctly
+      setActiveAccount: setActiveAccountId,
       strategies, addStrategy, updateStrategy, deleteStrategy,
       folders, addFolder, updateFolder, deleteFolder,
       notes, addNote, updateNote, deleteNote
