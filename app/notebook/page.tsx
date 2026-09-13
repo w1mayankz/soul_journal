@@ -463,6 +463,8 @@ export default function NotebookPage() {
         onConfirm={confirmDeleteNote}
       />
     </div>
+   </div>
+   </div>
   );
 }
 
