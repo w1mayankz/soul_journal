@@ -61,7 +61,7 @@ export default function NotebookPage() {
 
   // Selection State
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
-  const [activeNote, setActiveNote] = useState<Note | null>(null); // Null if creating new
+  const [activeNote, setActiveNote] = useState<Note | null>(null);
 
   // Editor State
   const [noteTitle, setNoteTitle] = useState('');
@@ -77,9 +77,10 @@ export default function NotebookPage() {
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
   const [editingFolder, setEditingFolder] = useState<Folder | null>(null);
   const [deletingFolder, setDeletingFolder] = useState<Folder | null>(null);
+  const [isCreateNoteOpen, setIsCreateNoteOpen] = useState(false);
   const [deletingNote, setDeletingNote] = useState<Note | null>(null);
 
-  // Split Folders
+  // Filters directly mapped to Context
   const filteredSystem = folders.filter(f => f.isSystem && f.name.toLowerCase().includes(folderSearchQuery.toLowerCase()));
   const filteredCustom = folders.filter(f => !f.isSystem && f.name.toLowerCase().includes(folderSearchQuery.toLowerCase()));
   const currentFolderNotes = notes.filter(n => n.folderId === selectedFolder?.id && n.title.toLowerCase().includes(noteSearchQuery.toLowerCase()));
@@ -141,18 +142,38 @@ export default function NotebookPage() {
     navigateBackward('notes');
   };
 
+  // FIX: Properly mapping deletion handlers to context functions
+  const confirmDeleteFolder = () => {
+    if (deletingFolder) deleteFolder(deletingFolder.id);
+    setDeletingFolder(null);
+  };
+
+  const handleCreateNote = (title: string) => {
+    if (!selectedFolder) return;
+    addNote({ 
+      id: Date.now().toString(), 
+      folderId: selectedFolder.id, 
+      title, 
+      body: '', 
+      createdAt: new Date().toISOString() 
+    });
+  };
+
+  const confirmDeleteNote = () => {
+    if (deletingNote) deleteNote(deletingNote.id);
+    setDeletingNote(null);
+  };
+
   // Breadcrumbs
   let navTitle = 'Notebook';
   if (activeView === 'notes' && selectedFolder) navTitle = `Notebook > ${selectedFolder.name}`;
   if (activeView === 'editor' && selectedFolder) navTitle = `Notebook > ${selectedFolder.name} > ${noteTitle || 'Untitled'}`;
 
-  // Slide Animation Class
   const slideAnim = `animate-in fade-in duration-300 ${slideDir === 'forward' ? 'slide-in-from-right-4' : 'slide-in-from-left-4'}`;
 
   return (
     <div className="relative min-h-screen bg-black font-sans text-white overflow-x-hidden">
       
-      {/* TOP NAVBAR is static, transitions do not affect it */}
       <TopNavbar title={navTitle}>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#141414] text-neutral-300 outline-none">
@@ -395,24 +416,30 @@ export default function NotebookPage() {
           <Type size={22} className="text-white" />
           <LinkIcon size={22} className="text-white" />
           
-          {/* onPointerDown ensures the blur fires instantly on mobile before losing focus */}
-          <button onPointerDown={(e) => { e.preventDefault(); document.activeElement?.blur(); }} className="outline-none">
+          {/* FIX: Properly cast as HTMLElement to trigger blur securely */}
+          <button onPointerDown={(e) => { e.preventDefault(); (document.activeElement as HTMLElement)?.blur(); }} className="outline-none">
             <ArrowDownFromLine size={22} className="text-white" />
           </button>
         </div>
       )}
 
       {/* --- MODALS --- */}
+      {/* FIX: Correct mapped handler to context's updateFolder */}
       <FolderModal 
         isOpen={isCreateFolderOpen || !!editingFolder}
         onClose={() => { setIsCreateFolderOpen(false); setEditingFolder(null); }}
         folder={editingFolder}
-        onSave={(folder) => editingFolder ? handleUpdateFolder(folder) : addFolder(folder)}
+        onSave={(folder) => editingFolder ? updateFolder(folder) : addFolder(folder)}
       />
       <DeleteFolderModal 
         folder={deletingFolder} 
         onClose={() => setDeletingFolder(null)} 
         onConfirm={confirmDeleteFolder} 
+      />
+      <NoteModal 
+        isOpen={isCreateNoteOpen}
+        onClose={() => setIsCreateNoteOpen(false)}
+        onSave={handleCreateNote}
       />
       <DeleteNoteModal 
         note={deletingNote}
@@ -503,6 +530,47 @@ function DeleteFolderModal({ folder, onClose, onConfirm }: { folder: Folder | nu
           <div className="flex items-center justify-end gap-3">
             <Dialog.Close className="rounded-xl bg-[#141414] px-5 py-2.5 text-[14px] font-medium text-neutral-400 outline-none">Cancel</Dialog.Close>
             <button onClick={onConfirm} className="rounded-xl bg-[#F44336] px-5 py-2.5 text-[14px] font-medium text-white outline-none">Delete</button>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
+
+function NoteModal({ isOpen, onClose, onSave }: { isOpen: boolean, onClose: () => void, onSave: (title: string) => void }) {
+  const [title, setTitle] = useState('');
+
+  useEffect(() => {
+    if (isOpen) setTitle('');
+  }, [isOpen]);
+
+  const handleSave = () => {
+    if (!title.trim()) return;
+    onSave(title.trim());
+    onClose();
+  };
+
+  return (
+    <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+        <Dialog.Content className="fixed left-[50%] top-[50%] z-[70] flex max-h-[90vh] w-[95vw] max-w-lg translate-x-[-50%] translate-y-[-50%] flex-col rounded-2xl border border-neutral-800 bg-[#090909] p-3 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]">
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <Dialog.Title className="text-[18px] font-medium text-white">Create Note</Dialog.Title>
+              <Dialog.Description className="mt-0.5 text-[15px] text-neutral-400 font-semibold">Give your new note a title.</Dialog.Description>
+            </div>
+            <Dialog.Close className="text-white outline-none"><Cancel01Icon size={22} /></Dialog.Close>
+          </div>
+          <div className="flex-1 overflow-y-auto pr-1.5 scrollbar-hide space-y-6 pb-4">
+            <div className="flex flex-col gap-2">
+              <label className="text-[14px] font-semibold text-white">Note title *</label>
+              <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Enter note title" className="w-full rounded-xl bg-[#1F1F1F] px-3 py-2.5 text-[14px] font-medium text-white outline-none placeholder:text-neutral-400 border border-transparent" />
+            </div>
+          </div>
+          <div className="mt-2 flex items-center justify-end gap-3 pt-4 border-t border-neutral-800/60">
+            <Dialog.Close className="rounded-xl px-5 py-2.5 text-[14px] font-medium text-neutral-400 bg-[#141414] outline-none">Cancel</Dialog.Close>
+            <button onClick={handleSave} className="rounded-xl bg-white px-5 py-2.5 text-[14px] font-medium text-black outline-none">Create</button>
           </div>
         </Dialog.Content>
       </Dialog.Portal>
