@@ -464,7 +464,6 @@ export default function NotebookPage() {
       />
     </div>
    </div>
-   </div>
   );
 }
 
