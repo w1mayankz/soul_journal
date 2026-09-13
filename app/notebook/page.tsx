@@ -40,7 +40,7 @@ import {
 import { useTrades, Folder, Note } from '../../context/trades-context';
 
 const ICONS = ['Folder01Icon', 'StarIcon', 'Book01Icon', 'Bookmark01Icon', 'Flag01Icon', 'File01Icon', 'Calendar01Icon', 'UserIcon', 'Home01Icon', 'Image01Icon'];
-const COLORS = ['#FFFFFF', '#A3A3A3', '#F44336', '#009C00', '#2196F3', '#FFEB3B', '#9C27B0', '#FF9800', '#E91E63', '#00BCD4'];
+const COLORS = ['#A3A3A3', '#F44336', '#009C00', '#2196F3', '#FFEB3B', '#9C27B0', '#FF9800', '#E91E63', '#00BCD4', '#FFFFFF'];
 
 const renderIcon = (iconName: string, color: string, size = 22) => {
   const IconMap: Record<string, React.ElementType> = {
@@ -55,38 +55,43 @@ export default function NotebookPage() {
   
   const [displayView, setDisplayView] = useState('Money View');
   
+  // Navigation State
   const [activeView, setActiveView] = useState<'folders' | 'notes' | 'editor'>('folders');
   const [slideDir, setSlideDir] = useState<'forward' | 'backward'>('forward');
 
+  // Selection State
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [activeNote, setActiveNote] = useState<Note | null>(null);
 
+  // Editor State
   const [noteTitle, setNoteTitle] = useState('');
   const [noteBody, setNoteBody] = useState('');
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
 
+  // Search State
   const [folderSearchQuery, setFolderSearchQuery] = useState('');
   const [noteSearchQuery, setNoteSearchQuery] = useState('');
 
+  // Modal State
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
   const [editingFolder, setEditingFolder] = useState<Folder | null>(null);
   const [deletingFolder, setDeletingFolder] = useState<Folder | null>(null);
+  const [isCreateNoteOpen, setIsCreateNoteOpen] = useState(false);
   const [deletingNote, setDeletingNote] = useState<Note | null>(null);
 
+  // Filters directly mapped to Context
   const filteredSystem = folders.filter(f => f.isSystem && f.name.toLowerCase().includes(folderSearchQuery.toLowerCase()));
   const filteredCustom = folders.filter(f => !f.isSystem && f.name.toLowerCase().includes(folderSearchQuery.toLowerCase()));
-  
-  // ALL NOTES logic: If selected folder is "all-notes", show all notes regardless of folderId.
-  const currentFolderNotes = selectedFolder?.id === 'all-notes' 
-    ? notes.filter(n => n.title.toLowerCase().includes(noteSearchQuery.toLowerCase()))
-    : notes.filter(n => n.folderId === selectedFolder?.id && n.title.toLowerCase().includes(noteSearchQuery.toLowerCase()));
+  const currentFolderNotes = notes.filter(n => n.folderId === selectedFolder?.id && n.title.toLowerCase().includes(noteSearchQuery.toLowerCase()));
 
+  // Auto-resize textareas
   const handleInputResize = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     e.target.style.height = 'auto';
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
+  // View Navigation
   const navigateForward = (view: 'notes' | 'editor') => {
     setSlideDir('forward');
     setActiveView(view);
@@ -137,9 +142,21 @@ export default function NotebookPage() {
     navigateBackward('notes');
   };
 
+  // FIX: Properly mapping deletion handlers to context functions
   const confirmDeleteFolder = () => {
     if (deletingFolder) deleteFolder(deletingFolder.id);
     setDeletingFolder(null);
+  };
+
+  const handleCreateNote = (title: string) => {
+    if (!selectedFolder) return;
+    addNote({ 
+      id: Date.now().toString(), 
+      folderId: selectedFolder.id, 
+      title, 
+      body: '', 
+      createdAt: new Date().toISOString() 
+    });
   };
 
   const confirmDeleteNote = () => {
@@ -147,6 +164,7 @@ export default function NotebookPage() {
     setDeletingNote(null);
   };
 
+  // Breadcrumbs
   let navTitle = 'Notebook';
   if (activeView === 'notes' && selectedFolder) navTitle = `Notebook > ${selectedFolder.name}`;
   if (activeView === 'editor' && selectedFolder) navTitle = `Notebook > ${selectedFolder.name} > ${noteTitle || 'Untitled'}`;
@@ -154,7 +172,7 @@ export default function NotebookPage() {
   const slideAnim = `animate-in fade-in duration-300 ${slideDir === 'forward' ? 'slide-in-from-right-4' : 'slide-in-from-left-4'}`;
 
   return (
-    <div className="relative min-h-screen bg-black font-sans text-white overflow-x-hidden">
+    <div className="relative min-h-[100dvh] bg-black font-sans text-white overflow-x-hidden">
       
       <TopNavbar title={navTitle}>
         <DropdownMenu.Root>
@@ -325,26 +343,23 @@ export default function NotebookPage() {
                 </div>
               )}
 
-              {/* HIDE ADD NOTE BUTTON FOR ALL-NOTES AND DAILY-JOURNAL */}
-              {!['all-notes', 'daily-journal'].includes(selectedFolder.id) && (
-                <button onClick={handleNewNote} className="flex w-full flex-col items-center justify-center gap-1 rounded-2xl border border-neutral-800/60 bg-[#090909] py-8 text-neutral-400 outline-none">
-                  <PlusSignIcon size={24} />
-                  <span className="text-[15px] font-medium">Add New Note</span>
-                </button>
-              )}
+              <button onClick={handleNewNote} className="flex w-full flex-col items-center justify-center gap-1 rounded-2xl border border-neutral-800/60 bg-[#090909] py-8 text-neutral-400 outline-none">
+                <PlusSignIcon size={24} />
+                <span className="text-[15px] font-medium">Add New Note</span>
+              </button>
             </div>
           </section>
         )}
 
-        {/* ==========================================
+                {/* ==========================================
             NOTE EDITOR VIEW
             ========================================== */}
         {activeView === 'editor' && (
-          <section className={`px-4 pt-2 flex flex-col h-full ${slideAnim}`}>
+          <section className={`px-4 pt-4 flex flex-col flex-1 ${slideAnim}`}>
             
-            {/* STICKY EDITOR HEADER WITH SAVE / LAST UPDATED */}
-            <div className="sticky top-14 z-40 bg-black pt-4 pb-4 flex flex-wrap items-center justify-between gap-3 mb-2 border-b border-transparent">
-              <div className="flex items-center gap-3 shrink-0">
+            {/* EDITOR HEADER (RESTORED BUTTONS) */}
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-3">
                 <button onClick={handleSaveEditor} className="text-white outline-none">
                   <ArrowLeft01Icon size={24} />
                 </button>
@@ -352,28 +367,18 @@ export default function NotebookPage() {
                   Add Tag
                 </button>
               </div>
-              
-              <div className="flex flex-1 justify-end shrink-0 min-w-[120px]">
-                {isKeyboardVisible ? (
-                  <button 
-                    onPointerDown={(e) => { e.preventDefault(); handleSaveEditor(); }} 
-                    className="rounded-lg bg-white px-5 py-2 text-[14px] font-bold text-black outline-none"
-                  >
-                    Save
-                  </button>
-                ) : (
-                  <span className="text-[11px] font-medium text-neutral-500 text-right leading-tight">
-                    Last Updated:<br/>
-                    {activeNote?.updatedAt || activeNote?.createdAt 
-                      ? format(new Date(activeNote.updatedAt || activeNote.createdAt), 'd MMM yyyy, HH:mm a') 
-                      : format(new Date(), 'd MMM yyyy, HH:mm a')}
-                  </span>
-                )}
+              <div className="flex items-center gap-3">
+                <button className="flex items-center gap-1 rounded-lg bg-[#141414] px-3 py-1.5 text-[13px] font-medium text-white outline-none">
+                  Template
+                </button>
+                <button className="text-white outline-none">
+                  <Menu01Icon size={24} />
+                </button>
               </div>
             </div>
 
-            {/* EDITOR TYPING AREA */}
-            <div className={`flex flex-col flex-1 transition-all ${isKeyboardVisible ? 'min-h-[40vh] pb-[90px]' : 'min-h-[70vh]'}`}>
+            {/* STICKY TITLE & SAVE/DATE AREA */}
+            <div className="sticky top-14 z-40 bg-black pt-4 pb-2 flex items-start justify-between gap-3 border-b border-transparent">
               <textarea
                 value={noteTitle}
                 onChange={(e) => { setNoteTitle(e.target.value); handleInputResize(e); }}
@@ -386,9 +391,32 @@ export default function NotebookPage() {
                 onFocus={() => setIsKeyboardVisible(true)}
                 onBlur={() => setIsKeyboardVisible(false)}
                 placeholder="Heading"
-                className="w-full resize-none overflow-hidden bg-transparent text-[28px] font-bold text-white outline-none placeholder:text-neutral-600 mb-2"
+                className="flex-1 resize-none overflow-hidden bg-transparent text-[28px] font-bold text-white outline-none placeholder:text-neutral-600 self-center"
                 rows={1}
+                style={{ minHeight: '40px' }}
               />
+              
+              <div className="flex shrink-0 items-center justify-end pt-2">
+                {isKeyboardVisible ? (
+                  <button 
+                    onPointerDown={(e) => { e.preventDefault(); handleSaveEditor(); }} 
+                    className="rounded-lg bg-white px-4 py-1.5 text-[13px] font-bold text-black outline-none"
+                  >
+                    Save
+                  </button>
+                ) : (
+                  <span className="text-[11px] font-medium text-neutral-500 text-right leading-tight max-w-[100px]">
+                    Last Updated:<br/>
+                    {activeNote?.updatedAt || activeNote?.createdAt 
+                      ? format(new Date(activeNote.updatedAt || activeNote.createdAt), 'd MMM, HH:mm') 
+                      : format(new Date(), 'd MMM, HH:mm')}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* EDITOR TYPING AREA (FIXED HEIGHT) */}
+            <div className="flex flex-col flex-1 pb-32">
               <textarea
                 ref={bodyRef}
                 value={noteBody}
@@ -396,16 +424,16 @@ export default function NotebookPage() {
                 onFocus={() => setIsKeyboardVisible(true)}
                 onBlur={() => setIsKeyboardVisible(false)}
                 placeholder="Type something..."
-                className="w-full flex-1 resize-none bg-transparent text-[16px] leading-relaxed text-white outline-none placeholder:text-neutral-600"
+                className="w-full h-full flex-1 resize-none bg-transparent text-[16px] leading-relaxed text-white outline-none placeholder:text-neutral-600 mt-2"
               />
             </div>
           </section>
         )}
       </div>
 
-      {/* LUCIDE KEYBOARD TOOLBAR */}
+      {/* LUCIDE KEYBOARD TOOLBAR (FIXED Z-INDEX) */}
       {activeView === 'editor' && isKeyboardVisible && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between border-t border-neutral-800 bg-[#141414] px-5 py-3 animate-in slide-in-from-bottom-2 fade-in duration-200">
+        <div className="fixed bottom-0 left-0 right-0 z-[100] flex items-center justify-between border-t border-neutral-800 bg-[#141414] px-5 py-3 shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
           <TableOfContents size={22} className="text-white" />
           <CaseSensitive size={22} className="text-white" />
           <Type size={22} className="text-white" />
@@ -416,7 +444,9 @@ export default function NotebookPage() {
         </div>
       )}
 
+
       {/* --- MODALS --- */}
+      {/* FIX: Correct mapped handler to context's updateFolder */}
       <FolderModal 
         isOpen={isCreateFolderOpen || !!editingFolder}
         onClose={() => { setIsCreateFolderOpen(false); setEditingFolder(null); }}
@@ -427,6 +457,11 @@ export default function NotebookPage() {
         folder={deletingFolder} 
         onClose={() => setDeletingFolder(null)} 
         onConfirm={confirmDeleteFolder} 
+      />
+      <NoteModal 
+        isOpen={isCreateNoteOpen}
+        onClose={() => setIsCreateNoteOpen(false)}
+        onSave={handleCreateNote}
       />
       <DeleteNoteModal 
         note={deletingNote}
@@ -442,13 +477,13 @@ export default function NotebookPage() {
 function FolderModal({ isOpen, onClose, folder, onSave }: { isOpen: boolean, onClose: () => void, folder: Folder | null, onSave: (f: Folder) => void }) {
   const [name, setName] = useState('');
   const [icon, setIcon] = useState('Folder01Icon');
-  const [color, setColor] = useState('#FFFFFF');
+  const [color, setColor] = useState('#A3A3A3');
 
   useEffect(() => {
     if (folder) {
       setName(folder.name); setIcon(folder.icon); setColor(folder.color);
     } else {
-      setName(''); setIcon('Folder01Icon'); setColor('#FFFFFF');
+      setName(''); setIcon('Folder01Icon'); setColor('#A3A3A3');
     }
   }, [folder, isOpen]);
 
@@ -480,7 +515,7 @@ function FolderModal({ isOpen, onClose, folder, onSave }: { isOpen: boolean, onC
               <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
                 {ICONS.map(i => (
                   <button key={i} onClick={() => setIcon(i)} className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#141414] border ${icon === i ? 'border-white' : 'border-transparent'} outline-none`}>
-                    {renderIcon(i, icon === i ? color : '#FFFFFF', 20)}
+                    {renderIcon(i, icon === i ? color : '#A3A3A3', 20)}
                   </button>
                 ))}
               </div>
@@ -517,6 +552,47 @@ function DeleteFolderModal({ folder, onClose, onConfirm }: { folder: Folder | nu
           <div className="flex items-center justify-end gap-3">
             <Dialog.Close className="rounded-xl bg-[#141414] px-5 py-2.5 text-[14px] font-medium text-neutral-400 outline-none">Cancel</Dialog.Close>
             <button onClick={onConfirm} className="rounded-xl bg-[#F44336] px-5 py-2.5 text-[14px] font-medium text-white outline-none">Delete</button>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
+
+function NoteModal({ isOpen, onClose, onSave }: { isOpen: boolean, onClose: () => void, onSave: (title: string) => void }) {
+  const [title, setTitle] = useState('');
+
+  useEffect(() => {
+    if (isOpen) setTitle('');
+  }, [isOpen]);
+
+  const handleSave = () => {
+    if (!title.trim()) return;
+    onSave(title.trim());
+    onClose();
+  };
+
+  return (
+    <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+        <Dialog.Content className="fixed left-[50%] top-[50%] z-[70] flex max-h-[90vh] w-[95vw] max-w-lg translate-x-[-50%] translate-y-[-50%] flex-col rounded-2xl border border-neutral-800 bg-[#090909] p-3 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]">
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <Dialog.Title className="text-[18px] font-medium text-white">Create Note</Dialog.Title>
+              <Dialog.Description className="mt-0.5 text-[15px] text-neutral-400 font-semibold">Give your new note a title.</Dialog.Description>
+            </div>
+            <Dialog.Close className="text-white outline-none"><Cancel01Icon size={22} /></Dialog.Close>
+          </div>
+          <div className="flex-1 overflow-y-auto pr-1.5 scrollbar-hide space-y-6 pb-4">
+            <div className="flex flex-col gap-2">
+              <label className="text-[14px] font-semibold text-white">Note title *</label>
+              <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Enter note title" className="w-full rounded-xl bg-[#1F1F1F] px-3 py-2.5 text-[14px] font-medium text-white outline-none placeholder:text-neutral-400 border border-transparent" />
+            </div>
+          </div>
+          <div className="mt-2 flex items-center justify-end gap-3 pt-4 border-t border-neutral-800/60">
+            <Dialog.Close className="rounded-xl px-5 py-2.5 text-[14px] font-medium text-neutral-400 bg-[#141414] outline-none">Cancel</Dialog.Close>
+            <button onClick={handleSave} className="rounded-xl bg-white px-5 py-2.5 text-[14px] font-medium text-black outline-none">Create</button>
           </div>
         </Dialog.Content>
       </Dialog.Portal>
