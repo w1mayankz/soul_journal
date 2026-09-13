@@ -147,6 +147,11 @@ export default function NotebookPage() {
     navigateBackward('notes');
   };
 
+  const handleSaveEditor = () => {
+    handleAutoSave();
+    bodyRef.current?.blur(); // Dismisses the mobile keyboard
+  };
+
   // FIX: Properly mapping deletion handlers to context functions
   const confirmDeleteFolder = () => {
     if (deletingFolder) deleteFolder(deletingFolder.id);
@@ -365,7 +370,7 @@ export default function NotebookPage() {
             {/* EDITOR HEADER */}
             <div className="flex items-center justify-between mb-2 shrink-0">
               <div className="flex items-center gap-3">
-                <button onClick={handleSaveEditor} className="text-white outline-none">
+                <button onClick={handleBackFromEditor} className="text-white outline-none">
                   <ArrowLeft01Icon size={24} />
                 </button>
                 <button className="flex items-center gap-1 rounded-lg bg-[#141414] px-3 py-1.5 text-[13px] font-medium text-white outline-none">
